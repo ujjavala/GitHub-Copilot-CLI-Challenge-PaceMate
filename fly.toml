@@ -1,51 +1,43 @@
-# fly.toml app configuration file
+# fly.toml app configuration file generated for pacemate-backend on 2026-02-15T02:52:41+11:00
+#
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
 
-app = "pacemate-backend"
-primary_region = "sjc"
-kill_signal = "SIGTERM"
+app = 'pacemate-backend'
+primary_region = 'sjc'
+kill_signal = 'SIGTERM'
 
 [build]
-  dockerfile = "backend/Dockerfile"
+  dockerfile = 'backend/Dockerfile'
 
 [env]
-  PHX_SERVER = "true"
-  PHX_HOST = "pacemate-backend.fly.dev"
-  PORT = "8080"
-  POOL_SIZE = "2"
+  PHX_HOST = 'pacemate-backend.fly.dev'
+  PHX_SERVER = 'true'
+  POOL_SIZE = '2'
+  PORT = '8080'
 
 [http_service]
   internal_port = 8080
   force_https = true
-  auto_stop_machines = "stop"
+  auto_stop_machines = 'stop'
   auto_start_machines = true
   min_machines_running = 0
-  processes = ["app"]
+  processes = ['app']
 
   [http_service.concurrency]
-    type = "connections"
+    type = 'connections'
     hard_limit = 1000
     soft_limit = 1000
 
-[[http_service.checks]]
-  interval = "10s"
-  timeout = "2s"
-  grace_period = "5s"
-  method = "GET"
-  path = "/api/health"
-  protocol = "http"
+  [[http_service.checks]]
+    interval = '15s'
+    timeout = '10s'
+    grace_period = '30s'
+    method = 'GET'
+    path = '/api/health'
+    protocol = 'http'
 
 [[vm]]
-  memory = "256mb"
-  cpu_kind = "shared"
+  memory = '256mb'
   cpus = 1
-
-# Optional: Add more regions for global coverage
-# [[services.ports]]
-#   handlers = ["http"]
-#   port = 80
-#   force_https = true
-#
-# [[services.ports]]
-#   handlers = ["tls", "http"]
-#   port = 443
+  memory_mb = 256

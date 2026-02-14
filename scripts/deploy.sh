@@ -100,7 +100,7 @@ setup_backend() {
 
     # Generate secret key
     print_info "Generating secret key..."
-    SECRET_KEY_BASE=$(mix phx.gen.secret)
+    SECRET_KEY_BASE=$(cd backend && mix phx.gen.secret)
 
     # Create app
     print_info "Creating Fly.io app..."
