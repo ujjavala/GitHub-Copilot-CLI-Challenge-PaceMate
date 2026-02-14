@@ -2,6 +2,43 @@
 
 A sophisticated proof of concept for a mindful speaking practice companion with **AI-powered feedback**, built with **Elm frontend** and **Elixir/Phoenix backend** for real-time, calm interaction.
 
+## ⚡ TL;DR - Quick Start
+
+**Prerequisites:** Docker, or (Elixir + Node.js)
+
+### Option 1: Docker with AI (Fastest ⚡)
+```bash
+docker-compose --profile ai up
+open http://localhost:3000
+```
+
+### Option 2: Docker without AI
+```bash
+docker-compose up
+open http://localhost:3000
+```
+
+### Option 3: Manual (Terminal 1 + 2)
+```bash
+# Terminal 1
+cd backend && mix phx.server
+
+# Terminal 2
+cd frontend && python3 -m http.server 3000
+```
+
+Then:
+1. Click **"Start Session"**
+2. See breathing animation → Click **"Ready"**
+3. See speaking prompt → Click **"Start"**
+4. See "Analyzing..." → Click **"Done"**
+5. Get beautiful AI feedback with metrics
+6. Click **"Practice Again"** to repeat
+
+**That's it!** 🎉
+
+---
+
 ## 🎯 Vision
 
 PaceMate creates a serene, supportive environment for paced speaking practice:
