@@ -18,27 +18,22 @@ defmodule BackendWeb.SessionChannelTest do
   end
 
   describe "finished_speaking" do
-    test "responds with feedback", %{socket: socket} do
-      ref = push(socket, "finished_speaking", %{})
-      assert_reply(ref, :ok, payload)
-      assert is_binary(payload["feedback"])
-      assert String.length(payload["feedback"]) > 0
+    test "responds with feedback structure", %{socket: socket} do
+      ref = push(socket, "finished_speaking", %{"speech" => "Hello world, this is a test speech"})
+      assert_reply(ref, :ok, payload, 5000)
+      assert is_binary(payload["encouragement"])
+      assert is_binary(payload["pacing"])
+      assert is_binary(payload["tips"])
+      assert String.length(payload["encouragement"]) > 0
     end
 
-    test "feedback is one of predefined messages", %{socket: socket} do
-      valid_messages = [
-        "Nice pacing. Keep it gentle.",
-        "Try a soft start next time.",
-        "Good breath before speaking.",
-        "You're doing great. Take your time.",
-        "Smooth delivery. Well done.",
-        "Remember to breathe between phrases.",
-        "Great effort! You're making progress."
-      ]
-
+    test "handles empty payload with fallback feedback", %{socket: socket} do
       ref = push(socket, "finished_speaking", %{})
       assert_reply(ref, :ok, payload)
-      assert Enum.member?(valid_messages, payload["feedback"])
+      assert is_binary(payload["encouragement"])
+      assert is_binary(payload["pacing"])
+      assert is_binary(payload["tips"])
+      assert payload["pacing"] == "Keep practicing your pacing!"
     end
   end
 

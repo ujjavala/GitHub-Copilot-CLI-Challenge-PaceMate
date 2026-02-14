@@ -125,7 +125,7 @@ defmodule Backend.AI.SpeechAnalysis do
              stream: false
            }),
            [{"Content-Type", "application/json"}],
-           []
+           recv_timeout: 2000, timeout: 2000
          ) do
       {:ok, response} ->
         parse_ollama_response(response.body)

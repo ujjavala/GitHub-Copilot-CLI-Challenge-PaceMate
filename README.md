@@ -1,18 +1,16 @@
 # PaceMate
 
-A sophisticated proof of concept for a mindful speaking practice companion with **AI-powered feedback**, built with **Elm frontend** and **Elixir/Phoenix backend** for real-time, calm interaction.
+A sophisticated proof of concept for a mindful speaking practice companion with AI-powered feedback, built with Elm frontend and Elixir/Phoenix backend for real-time interaction.
 
-## 🎬 Demo Video
+## Demo Video
 
-[![Play Demo Video](https://img.shields.io/badge/▶️%20Play%20Demo%20Video-blue?style=for-the-badge&logoColor=white)](Pacemate_Demo.mp4)
+[Download demo video](Pacemate_Demo.mp4) (MP4, 7.2MB)
 
-**[Download demo video](Pacemate_Demo.mp4)** (MP4, 7.2MB) - Click above or the link to view the demo in action
-
-## ⚡ TL;DR - Quick Start
+## Quick Start
 
 **Prerequisites:** Docker, or (Elixir + Node.js)
 
-### Option 1: Docker with AI (Fastest ⚡)
+### Option 1: Docker with AI
 ```bash
 docker-compose --profile ai up
 open http://localhost:3000
@@ -24,7 +22,7 @@ docker-compose up
 open http://localhost:3000
 ```
 
-### Option 3: Manual (Terminal 1 + 2)
+### Option 3: Manual
 ```bash
 # Terminal 1
 cd backend && mix phx.server
@@ -33,148 +31,43 @@ cd backend && mix phx.server
 cd frontend && python3 -m http.server 3000
 ```
 
-Then:
-1. Click **"Start Session"**
-2. See breathing animation → Click **"I'm Ready"**
-3. See speaking prompt → Click **"Start Speaking"**
-4. See "Analyzing..." → Click **"I'm done"**
-5. Get beautiful AI feedback with metrics
-6. Click **"Practice Again"** to repeat
-
-**That's it!** 🎉
-
----
-
-## 🎯 Vision
+## Vision
 
 PaceMate creates a serene, supportive environment for paced speaking practice:
-- **Calm UI** - Professional, distraction-free design with Font Awesome icons
-- **No time pressure** - Users control pacing completely
-- **AI-Powered Feedback** - Personalized pacing tips using Ollama & Llama2
-- **Real-time interaction** - Immediate server responses via WebSocket
-- **Detailed Metrics** - Analyze pacing, sentence structure, and speaking rate
+- Calm UI with professional, distraction-free design
+- User-controlled pacing without time pressure
+- AI-powered personalized feedback using Ollama & phi3
+- Real-time interaction via WebSocket
+- Detailed metrics for pacing analysis
 
-## ✨ Key Features
+## Key Features
 
-### 🤖 AI Speech Analysis
-- **Pacing Analysis** - Calculates words per minute and sentence structure
-- **Personalized Tips** - AI-generated feedback using Ollama (Llama2)
-- **Pacing Guidance** - Actionable suggestions for breathing and rhythm
-- **Encouragement** - Warm, supportive messages
-- **Detailed Metrics** - Word count, sentence count, WPM, avg sentence length
+### AI Speech Analysis
+- Pacing analysis with words per minute calculation
+- Personalized tips using local AI (Ollama phi3)
+- Actionable guidance for breathing and rhythm
+- Warm, supportive encouragement
+- Detailed metrics: word count, sentences, WPM, avg sentence length
 
-### 🎨 Professional UI
-- **Beautiful Feedback Cards** - Multi-section display with gradients
-- **Responsive Design** - Mobile, tablet, desktop optimized
-- **Dark Mode** - Automatic dark theme support
-- **Smooth Animations** - Breathing pulse, speaking bounce, card transitions
-- **Font Awesome Icons** - Professional icon library
-- **WCAG Compliant** - Accessibility features built-in
+### Professional UI
+- Multi-section feedback cards with gradients
+- Responsive design for mobile, tablet, and desktop
+- Automatic dark mode support
+- Smooth animations for breathing and speaking states
+- WCAG compliant accessibility features
 
-### 🚀 Modern Stack
-- **Frontend:** Elm (type-safe, zero-runtime errors)
-- **Backend:** Elixir/Phoenix (real-time WebSocket)
-- **AI:** Ollama/Llama2 (local, private LLM)
-- **DevOps:** Docker Compose (single-command startup)
+### Technology Stack
+- Frontend: Elm (type-safe functional programming)
+- Backend: Elixir/Phoenix (real-time WebSocket)
+- AI: Ollama/phi3 (local, private LLM)
+- DevOps: Docker Compose
 
----
-
-## ⚡ Quick Start (30 seconds)
-
-### Option 1: Docker with AI (Recommended)
-
-```bash
-docker-compose --profile ai up
-open http://localhost:3000
-```
-
-This includes:
-- Backend (Elixir/Phoenix) on port 4000
-- Frontend (Elm) on port 3000
-- Ollama (AI) on port 11434
-
-### Option 2: Docker without AI
-
-```bash
-docker-compose up
-open http://localhost:3000
-```
-
-### Option 3: Manual Setup
-
-**Terminal 1: Backend**
-```bash
-cd backend && mix phx.server
-```
-
-**Terminal 2: Frontend**
-```bash
-cd frontend && python3 -m http.server 3000
-```
-
----
-
-## 📊 Feedback Display
-
-When users complete speaking, they receive structured feedback:
-
-```
-💬 Encouragement      → "You're making great progress with clarity!"
-⏱️ Pacing Analysis    → "Your pacing is good - maintain steady rhythm"
-💡 Tips              → "Try breaking sentences into shorter phrases"
-📊 Metrics           → Words: 45 | Sentences: 3 | WPM: 90
-```
-
----
-
-## 🚀 Production Deployment
-
-**Ready to deploy?** Everything is configured for Fly.io (backend) + Netlify (frontend).
-
-### Quick Deploy (5 minutes)
-
-```bash
-# 1. Deploy backend to Fly.io
-./scripts/deploy.sh setup    # First time only
-./scripts/deploy.sh backend  # Deploy!
-
-# 2. Deploy frontend to Netlify
-# Visit https://app.netlify.com/ and connect your repo
-# Configure: Base=frontend, Build=npm install && npm run build:elm, Publish=frontend
-
-# 3. Test
-curl https://pacemate-backend.fly.dev/api/health
-open https://your-site.netlify.app
-```
-
-**Total Cost:** $0/month (free tiers) ✅
-
-### Deployment Guides
-
-- **[READY_TO_DEPLOY.md](READY_TO_DEPLOY.md)** - Start here! Complete walkthrough
-- **[DEPLOY_QUICKSTART.md](DEPLOY_QUICKSTART.md)** - 5-minute deploy commands
-- **[DEPLOYMENT.md](DEPLOYMENT.md)** - Full guide with scaling, monitoring, troubleshooting
-
-### What's Included
-
-- ✅ Fly.io configuration ([fly.toml](fly.toml))
-- ✅ Netlify configuration ([netlify.toml](netlify.toml))
-- ✅ GitHub Actions CI/CD ([.github/workflows/deploy-backend.yml](.github/workflows/deploy-backend.yml))
-- ✅ Deployment helper script ([scripts/deploy.sh](scripts/deploy.sh))
-- ✅ Auto-detecting WebSocket URLs (local/production)
-- ✅ Health check endpoints
-- ✅ Auto-scaling (scale to zero on free tier)
-
-**Push to `main` = Auto-deploy to production** 🎉
-
----
-
-## 🏗️ Architecture
+## Architecture
 
 ### State Machine (Frontend)
 
 ```
-Idle 
+Idle
   ↓ [Start] → Breathing (pulse animation)
   ↓ [Ready] → Prompt (speaking prompt + tips)
   ↓ [Start] → Speaking (microphone indicator)
@@ -214,9 +107,7 @@ Frontend renders beautiful feedback cards
 - `speech_analysis.ex` - AI integration
 - `feedback.ex` - Simple feedback generator
 
----
-
-## �� Testing
+## Testing
 
 ### Run All Tests
 
@@ -230,48 +121,42 @@ cd frontend && npx elm-test
 
 ### Test Coverage
 
-- **Backend:** Feedback generation, Channel messaging, AI analysis
-- **Frontend:** State transitions, Feedback decoding, UI rendering
+- Backend: Feedback generation, Channel messaging, AI analysis
+- Frontend: State transitions, Feedback decoding, UI rendering
 
 See [TESTING.md](TESTING.md) for detailed guide.
 
----
+## Documentation
 
-## 📚 Documentation
+- README.md (this) - Overview and quick start
+- AI_FEATURES.md - AI-powered analysis details
+- DOCKER.md - Docker deployment guide
+- TESTING.md - Testing strategy and examples
+- ARCHITECTURE.md - Design decisions and extensibility
+- DELIVERABLES.md - What was built
 
-- **README.md** (this) - Overview and quick start
-- **AI_FEATURES.md** - AI-powered analysis details
-- **DOCKER.md** - Docker deployment guide
-- **TESTING.md** - Testing strategy and examples
-- **ARCHITECTURE.md** - Design decisions and extensibility
-- **DELIVERABLES.md** - What was built
-
----
-
-## 🔧 Technical Stack
+## Technical Stack
 
 | Component | Technology | Version |
 |-----------|-----------|---------|
-| **Frontend** | Elm | 0.19.1 |
-| **Backend** | Elixir/Phoenix | 1.19 / 1.8.3 |
-| **AI** | Ollama/Llama2 | Latest |
-| **Runtime** | Erlang/OTP | 28 |
-| **Container** | Docker | Latest |
-| **Icons** | Font Awesome | 6.4 |
-| **Testing** | ExUnit / elm-test | Latest |
+| Frontend | Elm | 0.19.1 |
+| Backend | Elixir/Phoenix | 1.19 / 1.8.3 |
+| AI | Ollama/phi3 | Latest |
+| Runtime | Erlang/OTP | 28 |
+| Container | Docker | Latest |
+| Icons | Font Awesome | 6.4 |
+| Testing | ExUnit / elm-test | Latest |
 
----
-
-## 📋 Code Quality
+## Code Quality
 
 ### Clean Code Principles
 
-✅ **Single Responsibility** - Each module has one purpose  
-✅ **Functional** - Pure functions, no side effects  
-✅ **Type-Safe** - Elm's compiler prevents entire classes of bugs  
-✅ **Well-Tested** - >85% coverage on critical paths  
-✅ **Documented** - Comprehensive doc comments  
-✅ **Modular** - Easy to understand and extend
+- Single Responsibility: Each module has one purpose
+- Functional: Pure functions, no side effects
+- Type-Safe: Elm's compiler prevents entire classes of bugs
+- Well-Tested: >85% coverage on critical paths
+- Documented: Comprehensive doc comments
+- Modular: Easy to understand and extend
 
 ### Metrics
 
@@ -283,64 +168,58 @@ See [TESTING.md](TESTING.md) for detailed guide.
 | Documentation | ~8000 |
 | Total | ~8700 |
 
----
-
-## 🎨 UI/UX Highlights
+## UI/UX Highlights
 
 ### Professional Design
 
-- **Typography:** Inter font family (Google Fonts)
-- **Colors:** Gradient purples, green success, orange pacing
-- **Spacing:** Generous whitespace for calm aesthetic
-- **Shadows:** Subtle shadows for depth
-- **Animations:** Smooth transitions with Bezier curves
+- Typography: Inter font family (Google Fonts)
+- Colors: Gradient purples, green success, orange pacing
+- Spacing: Generous whitespace for calm aesthetic
+- Shadows: Subtle shadows for depth
+- Animations: Smooth transitions with Bezier curves
 
 ### Responsive Breakpoints
 
-- **Desktop:** Full featured (1200px+)
-- **Tablet:** Optimized layout (768px-1200px)
-- **Mobile:** Single column (320px-768px)
+- Desktop: Full featured (1200px+)
+- Tablet: Optimized layout (768px-1200px)
+- Mobile: Single column (320px-768px)
 
 ### Accessibility
 
-- ✅ WCAG 2.1 AA compliant
-- ✅ Keyboard navigation support
-- ✅ Screen reader friendly
-- ✅ High contrast mode
-- ✅ Reduced motion support
+- WCAG 2.1 AA compliant
+- Keyboard navigation support
+- Screen reader friendly
+- High contrast mode
+- Reduced motion support
 
----
+## AI Integration
 
-## 🤖 AI Integration
-
-### Ollama & Llama2
+### Ollama & phi3
 
 Ollama provides a simple way to run LLMs locally:
-- **Private:** All processing on your machine
-- **Fast:** Near-instant responses
-- **Free:** No API costs
-- **Offline:** Works without internet
+- Private: All processing on your machine
+- Fast: Near-instant responses
+- Free: No API costs
+- Offline: Works without internet
 
 ### What AI Does
 
-1. **Analyzes speech metrics** - WPM, sentence structure
-2. **Generates tips** - Personalized suggestions for improvement
-3. **Provides encouragement** - Warm, supportive feedback
-4. **Fallback mode** - Works without AI if unavailable
+1. Analyzes speech metrics - WPM, sentence structure
+2. Generates tips - Personalized suggestions for improvement
+3. Provides encouragement - Warm, supportive feedback
+4. Fallback mode - Works without AI if unavailable
 
 ### Example AI Feedback
 
 ```
-TIPS: Try speaking a bit more slowly. Break long sentences 
+TIPS: Try speaking a bit more slowly. Break long sentences
 into shorter phrases. Consider adding pauses for breath.
 
-ENCOURAGEMENT: You're making excellent progress with clarity 
+ENCOURAGEMENT: You're making excellent progress with clarity
 and pacing. Keep practicing!
 ```
 
----
-
-## 🚀 Running Locally
+## Running Locally
 
 ### Prerequisites
 
@@ -390,24 +269,20 @@ ollama serve
 # Runs on http://localhost:11434
 ```
 
----
+## Test the Flow
 
-## 🧪 Test the Flow
-
-1. Open **http://localhost:3000**
-2. Click **"Start Session"** (blue button)
+1. Open http://localhost:3000
+2. Click "Start Session" (blue button)
 3. See breathing animation
-4. Click **"I'm ready"**
+4. Click "I'm ready"
 5. Read the prompt
-6. Click **"Start speaking"**
-7. Click **"I'm done"**
+6. Click "Start speaking"
+7. Click "I'm done"
 8. Wait for AI analysis...
 9. See beautiful feedback cards
-10. Click **"Practice again"** to restart
+10. Click "Practice again" to restart
 
----
-
-## 📊 Performance
+## Performance
 
 ### Load Times
 - Backend startup: ~3 seconds
@@ -420,29 +295,25 @@ ollama serve
 - Messages/sec: 1000+ per user
 - Response time: <10ms (backend)
 
----
-
-## 🔐 Security
+## Security
 
 ### Built-in Features
 
-- ✅ WebSocket over local network
-- ✅ No authentication required (POC)
-- ✅ No database exposure
-- ✅ Validates all inputs
+- WebSocket over local network
+- No authentication required (POC)
+- No database exposure
+- Validates all inputs
 
 ### Production Checklist
 
-- [ ] Use HTTPS (wss:// for WebSocket)
-- [ ] Add authentication
-- [ ] Rate limiting
-- [ ] Input validation
-- [ ] Audit logging
-- [ ] Security headers
+- Use HTTPS (wss:// for WebSocket)
+- Add authentication
+- Rate limiting
+- Input validation
+- Audit logging
+- Security headers
 
----
-
-## 🌱 Future Enhancements
+## Future Enhancements
 
 ### Short Term
 
@@ -465,9 +336,7 @@ ollama serve
 - Real-time transcription
 - Video integration
 
----
-
-## 📝 Contributing
+## Contributing
 
 Areas for improvement:
 1. Real speech recognition
@@ -476,9 +345,7 @@ Areas for improvement:
 4. Mobile optimization
 5. Additional exercises
 
----
-
-## 🐛 Known Limitations (Intentional for POC)
+## Known Limitations (Intentional for POC)
 
 - No database (in-memory only)
 - No authentication
@@ -487,15 +354,11 @@ Areas for improvement:
 
 Production version would address all of these.
 
----
-
-## 📜 License
+## License
 
 This POC is provided as-is for educational purposes.
 
----
-
-## 🤝 Support
+## Support
 
 **Questions or issues?**
 
@@ -504,20 +367,18 @@ This POC is provided as-is for educational purposes.
 - See [TESTING.md](TESTING.md) for test guides
 - See [DOCKER.md](DOCKER.md) for deployment help
 
----
-
-## 🎓 Learning Outcomes
+## Learning Outcomes
 
 After exploring this POC, you'll understand:
 
-✅ Elm state machines & functional programming  
-✅ Phoenix Channels & WebSocket protocol  
-✅ Elm Ports for JavaScript interop  
-✅ Real-time communication patterns  
-✅ AI integration with local LLMs  
-✅ Professional UI/UX design  
-✅ Clean code principles  
-✅ Full-stack Elm + Elixir architecture  
+- Elm state machines & functional programming
+- Phoenix Channels & WebSocket protocol
+- Elm Ports for JavaScript interop
+- Real-time communication patterns
+- AI integration with local LLMs
+- Professional UI/UX design
+- Clean code principles
+- Full-stack Elm + Elixir architecture
 
 ---
 
@@ -533,8 +394,6 @@ docker-compose up && open http://localhost:3000
 # Manual (see Quick Start above)
 ```
 
-**Happy practicing! 🎉**
-
 ---
 
-*Built with ❤️ for accessibility and calm technology*
+Built for accessibility and calm technology
