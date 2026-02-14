@@ -30,6 +30,8 @@ let channel = null;
 let recognition = null;
 let recognizedText = '';
 let isRecognizing = false;
+let speechTimestamps = [];
+let speechStartTime = null;
 
 // Initialize Web Speech API
 function initSpeechRecognition() {
@@ -50,6 +52,8 @@ function initSpeechRecognition() {
     console.log('[Speech] Make sure microphone permission is granted!');
     isRecognizing = true;
     recognizedText = '';
+    speechTimestamps = [];
+    speechStartTime = Date.now();
   };
 
   recognition.onresult = function(event) {
@@ -61,6 +65,11 @@ function initSpeechRecognition() {
       if (event.results[i].isFinal) {
         finalTranscript += transcript + ' ';
         console.log('[Speech] Final result:', transcript);
+        // Track timing for each word
+        speechTimestamps.push({
+          text: transcript,
+          timestamp: Date.now()
+        });
       } else {
         interimTranscript += transcript;
         console.log('[Speech] Interim result:', transcript);
@@ -158,6 +167,54 @@ function connectToChannel() {
   };
 }
 
+// Client-side speech analysis (fallback when backend is unavailable)
+function analyzeClientSide(speechText, timestamps, startTime) {
+  const words = speechText.trim().split(/\s+/).filter(word => word.length > 0);
+  const totalDurationSeconds = (Date.now() - startTime) / 1000;
+  const wordCount = words.length;
+  const wordsPerMinute = wordCount > 0 ? Math.round((wordCount / totalDurationSeconds) * 60) : 0;
+
+  // Detect potential repetitions (consecutive duplicate words)
+  const detectedRepetitions = [];
+  for (let wordIndex = 0; wordIndex < words.length - 1; wordIndex++) {
+    const currentWord = words[wordIndex].toLowerCase();
+    const nextWord = words[wordIndex + 1].toLowerCase();
+
+    if (currentWord === nextWord) {
+      detectedRepetitions.push(words[wordIndex]);
+    }
+  }
+
+  // Analyze pacing and provide advice
+  let pacingAdvice = '';
+  if (wordsPerMinute < 100) {
+    pacingAdvice = 'Great pacing! Your speed is comfortable and easy to follow.';
+  } else if (wordsPerMinute < 140) {
+    pacingAdvice = 'Good pace. You might want to slow down slightly for clarity.';
+  } else {
+    pacingAdvice = 'Try slowing down. Speaking more slowly can help reduce stuttering.';
+  }
+
+  let repetitionAdvice = '';
+  const repetitionCount = detectedRepetitions.length;
+  if (repetitionCount > 0) {
+    repetitionAdvice = `Noticed ${repetitionCount} repetition(s). Take a breath before difficult words.`;
+  } else {
+    repetitionAdvice = 'No repetitions detected. Well done!';
+  }
+
+  return {
+    wpm: wordsPerMinute,
+    word_count: wordCount,
+    duration: totalDurationSeconds.toFixed(1),
+    pace_advice: pacingAdvice,
+    repetition_advice: repetitionAdvice,
+    detected_repetitions: detectedRepetitions.slice(0, 3),
+    feedback: `${pacingAdvice} ${repetitionAdvice}`,
+    source: 'client-side'
+  };
+}
+
 // Initialize speech recognition
 initSpeechRecognition();
 
@@ -195,7 +252,7 @@ app.ports.send.subscribe(function (msg) {
         console.warn('[Speech] Has microphone permission?', 'Check browser permissions');
       }
 
-      // Send the recognized speech to backend
+      // Send the recognized speech to backend OR use client-side analysis as fallback
       if (socket && socket.readyState === WebSocket.OPEN) {
         const speechToSend = recognizedText.trim() || 'No speech detected';
         const message = {
@@ -208,7 +265,15 @@ app.ports.send.subscribe(function (msg) {
         console.log('[WebSocket] Sending message:', message);
         socket.send(JSON.stringify(message));
       } else {
-        console.warn('[WebSocket] Connection not ready, message not sent');
+        console.warn('[WebSocket] Backend not available, using client-side analysis');
+        // Use client-side analysis as fallback
+        const analysis = analyzeClientSide(recognizedText, speechTimestamps, speechStartTime);
+        console.log('[Client] Analysis result:', analysis);
+
+        // Send analysis result to Elm app
+        if (app.ports && app.ports.recv) {
+          app.ports.recv.send(analysis);
+        }
       }
     }, 1500);
   } else {
