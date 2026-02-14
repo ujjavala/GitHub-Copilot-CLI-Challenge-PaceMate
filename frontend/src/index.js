@@ -1,6 +1,4 @@
-// Import Elm application
-import { Elm } from './Main.elm';
-
+// Elm is loaded globally from dist/elm.js
 const app = Elm.Main.init({ node: document.getElementById('app') });
 
 // Theme management
