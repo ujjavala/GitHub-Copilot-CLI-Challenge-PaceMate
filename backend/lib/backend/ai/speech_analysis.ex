@@ -26,9 +26,6 @@ defmodule Backend.AI.SpeechAnalysis do
 
   def analyze_speech(_), do: {:error, "Invalid speech input"}
 
-  @doc """
-  Calculate pacing metrics from speech text.
-  """
   @spec parse_speech_metrics(String.t()) :: {:ok, map()} | {:error, String.t()}
   defp parse_speech_metrics(text) do
     words = String.split(text) |> length()
@@ -45,9 +42,6 @@ defmodule Backend.AI.SpeechAnalysis do
      }}
   end
 
-  @doc """
-  Count sentences in text (simple heuristic).
-  """
   @spec count_sentences(String.t()) :: non_neg_integer()
   defp count_sentences(text) do
     text
@@ -55,9 +49,6 @@ defmodule Backend.AI.SpeechAnalysis do
     |> Enum.count(fn s -> String.trim(s) != "" end)
   end
 
-  @doc """
-  Estimate words per minute (assuming 120 WPM for calm speech).
-  """
   @spec estimate_wpm(non_neg_integer()) :: float()
   defp estimate_wpm(words) do
     # Typical speaking rate: 120-150 WPM for calm speech
@@ -65,10 +56,6 @@ defmodule Backend.AI.SpeechAnalysis do
     (words / 30) * 60
   end
 
-  @doc """
-  Generate AI-powered feedback using Ollama.
-  Falls back to rule-based feedback if Ollama unavailable.
-  """
   @spec generate_ai_feedback(String.t(), map()) :: {:ok, map()} | {:error, String.t()}
   defp generate_ai_feedback(speech_text, metrics) do
     case query_ollama(speech_text, metrics) do
@@ -103,9 +90,6 @@ defmodule Backend.AI.SpeechAnalysis do
     end
   end
 
-  @doc """
-  Query Ollama for AI-generated feedback.
-  """
   @spec query_ollama(String.t(), map()) :: {:ok, map()} | {:error, String.t()}
   defp query_ollama(speech_text, metrics) do
     ollama_host = System.get_env("OLLAMA_HOST") || "http://localhost:11434"
@@ -146,9 +130,6 @@ defmodule Backend.AI.SpeechAnalysis do
     _ -> {:error, "Ollama connection failed"}
   end
 
-  @doc """
-  Parse Ollama API response.
-  """
   @spec parse_ollama_response(String.t()) :: {:ok, map()} | {:error, String.t()}
   defp parse_ollama_response(body) do
     case Jason.decode(body) do
@@ -162,9 +143,6 @@ defmodule Backend.AI.SpeechAnalysis do
     _ -> {:error, "Error processing Ollama response"}
   end
 
-  @doc """
-  Extract structured feedback from Ollama response.
-  """
   @spec extract_feedback_from_response(String.t()) :: {:ok, map()} | {:error, String.t()}
   defp extract_feedback_from_response(response) do
     case Regex.scan(~r/TIPS:\s*(.*?)\n/s, response) do
@@ -186,9 +164,6 @@ defmodule Backend.AI.SpeechAnalysis do
     end
   end
 
-  @doc """
-  Format pacing feedback based on metrics.
-  """
   @spec format_pacing_feedback(map()) :: String.t()
   defp format_pacing_feedback(%{estimated_wpm: wpm, avg_sentence_length: avg_len} = metrics) do
     pacing =
@@ -213,9 +188,6 @@ defmodule Backend.AI.SpeechAnalysis do
     pacing <> sentence_feedback <> pause_advice
   end
 
-  @doc """
-  Rule-based tips for when Ollama is unavailable.
-  """
   @spec rule_based_tips(map()) :: String.t()
   defp rule_based_tips(%{estimated_wpm: wpm, sentences: sentences}) do
     tips = []
@@ -240,6 +212,6 @@ defmodule Backend.AI.SpeechAnalysis do
         do: ["Maintain your current pace", "Your clarity is excellent"],
         else: tips
 
-    tips |> Enum.join(". ") <> "."
+    (tips |> Enum.join(". ")) <> "."
   end
 end
