@@ -3,19 +3,19 @@ FROM node:20-alpine AS builder
 
 WORKDIR /app
 
-# Install dependencies
-COPY frontend/package*.json ./
-RUN npm install --legacy-peer-deps
+# Install Elm from Alpine package manager (avoids npm binary download issues)
+RUN apk add --no-cache elm
 
-# Install Elm
-RUN npm install -D elm
+# Install Node dependencies
+COPY frontend/package*.json ./
+RUN npm install --legacy-peer-deps --ignore-scripts
 
 # Copy Elm source
 COPY frontend/src ./src
 COPY frontend/elm.json .
 
 # Compile Elm
-RUN npm run build
+RUN elm make src/Main.elm --output dist/elm.js
 
 # Runtime stage
 FROM node:20-alpine
