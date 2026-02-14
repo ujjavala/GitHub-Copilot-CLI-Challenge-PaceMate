@@ -23,7 +23,7 @@ services:
       retries: 3
       start_period: 40s
     networks:
-      - stutter_network
+      - pacemate_network
 
   frontend:
     build:
@@ -43,7 +43,7 @@ services:
       retries: 3
       start_period: 10s
     networks:
-      - stutter_network
+      - pacemate_network
 
   ollama:
     image: ollama/ollama:latest
@@ -60,13 +60,13 @@ services:
       retries: 5
       start_period: 40s
     networks:
-      - stutter_network
+      - pacemate_network
     command: serve
     profiles:
       - ai
 
 networks:
-  stutter_network:
+  pacemate_network:
     driver: bridge
 
 volumes:

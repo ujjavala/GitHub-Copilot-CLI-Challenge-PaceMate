@@ -1,4 +1,4 @@
-# ✅ Stutter-Accessibility POC - Setup Complete!
+# ✅ PaceMate-Accessibility POC - Setup Complete!
 
 ## 🎉 What Was Built
 

@@ -1,4 +1,4 @@
-# Stutter-Accessibility POC - Frontend
+# PaceMate-Accessibility POC - Frontend
 
 Elm single-page application with WebSocket integration for real-time speaking practice feedback.
 

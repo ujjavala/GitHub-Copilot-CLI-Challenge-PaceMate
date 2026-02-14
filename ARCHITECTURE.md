@@ -1,10 +1,11 @@
-# Architecture & Design
+# Architecture & Design - PaceMate
 
 ## Overview
 
-This POC demonstrates a real-time, calm speaking practice application using:
-- **Frontend**: Elm (state management, UI)
-- **Backend**: Elixir/Phoenix (WebSocket handling, feedback generation)
+PaceMate is a proof of concept demonstrating a real-time, calm speaking practice application using:
+- **Frontend**: Elm (type-safe state management, beautiful UI)
+- **Backend**: Elixir/Phoenix (concurrent WebSocket handling, feedback generation)
+- **AI**: Ollama/Llama2 (local LLM for personalized pacing analysis)
 - **Communication**: Phoenix Channels via WebSocket
 
 ## Application Flow
@@ -45,7 +46,22 @@ type State
 
 type alias Model =
   { state : State
-  , feedback : Maybe String
+  , feedback : Maybe Feedback
+  , isLoading : Bool
+  }
+
+type alias Feedback =
+  { encouragement : String
+  , pacing : String
+  , tips : String
+  , metrics : Metrics
+  }
+
+type alias Metrics =
+  { words : Int
+  , sentences : Int
+  , avgSentenceLength : Float
+  , estimatedWpm : Float
   }
 ```
 
@@ -93,14 +109,27 @@ UserSocket (lib/backend_web/channels/user_socket.ex)
       └─ handle_out/3 - (optional) broadcast to client
 ```
 
-### Feedback Generation
+### Feedback Generation Pipeline
 
 ```
-Backend.Feedback.random_feedback()
+User sends speech text via WebSocket
   ↓
-  Selects random string from list
+SessionChannel.handle_in receives "finished_speaking"
   ↓
-  Returns feedback to client via Phoenix Channel
+Backend.AI.SpeechAnalysis.analyze_speech/1
+  ├─ Extract metrics (word count, sentences, WPM)
+  ├─ Call Ollama API with Llama2
+  └─ Parse AI response (TIPS + ENCOURAGEMENT)
+  ↓
+Return structured Feedback
+  ├─ encouragement (from AI)
+  ├─ pacing (calculated metrics)
+  ├─ tips (from AI)
+  └─ metrics (parsed)
+  ↓
+Send to client via Phoenix Channel
+  ↓
+Elm View renders beautiful feedback card
 ```
 
 ## WebSocket Protocol

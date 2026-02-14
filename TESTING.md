@@ -149,15 +149,15 @@ Update module:
 ### Backend Tests
 
 ```bash
-docker build -f backend/Dockerfile --target builder -t stutter-backend-test .
-docker run stutter-backend-test mix test
+docker build -f backend/Dockerfile --target builder -t pacemate-backend-test .
+docker run pacemate-backend-test mix test
 ```
 
 ### Frontend Tests
 
 ```bash
-docker build -f frontend/Dockerfile --target builder -t stutter-frontend-test .
-docker run stutter-frontend-test npx elm-test
+docker build -f frontend/Dockerfile --target builder -t pacemate-frontend-test .
+docker run pacemate-frontend-test npx elm-test
 ```
 
 ---

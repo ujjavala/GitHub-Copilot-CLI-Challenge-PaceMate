@@ -1,13 +1,13 @@
-# Stutter-Accessibility POC
+# PaceMate
 
-A sophisticated 1-day proof of concept demonstrating real-time interaction between an **Elm frontend** and **Elixir/Phoenix backend** with **AI-powered speech analysis** for a calm, distraction-free speaking practice experience.
+A sophisticated proof of concept for a mindful speaking practice companion with **AI-powered feedback**, built with **Elm frontend** and **Elixir/Phoenix backend** for real-time, calm interaction.
 
 ## 🎯 Vision
 
-Build a gentle, real-time speaking practice app that prioritizes:
+PaceMate creates a serene, supportive environment for paced speaking practice:
 - **Calm UI** - Professional, distraction-free design with Font Awesome icons
 - **No time pressure** - Users control pacing completely
-- **AI-Powered Feedback** - Personalized tips using Ollama & Llama2
+- **AI-Powered Feedback** - Personalized pacing tips using Ollama & Llama2
 - **Real-time interaction** - Immediate server responses via WebSocket
 - **Detailed Metrics** - Analyze pacing, sentence structure, and speaking rate
 
@@ -16,7 +16,7 @@ Build a gentle, real-time speaking practice app that prioritizes:
 ### 🤖 AI Speech Analysis
 - **Pacing Analysis** - Calculates words per minute and sentence structure
 - **Personalized Tips** - AI-generated feedback using Ollama (Llama2)
-- **Stutter Tips** - Actionable suggestions for breathing and pacing
+- **Pacing Guidance** - Actionable suggestions for breathing and rhythm
 - **Encouragement** - Warm, supportive messages
 - **Detailed Metrics** - Word count, sentence count, WPM, avg sentence length
 

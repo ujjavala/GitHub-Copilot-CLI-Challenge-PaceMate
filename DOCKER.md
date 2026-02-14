@@ -55,13 +55,13 @@ Services communicate over internal Docker network `stutter_network`
 ### Build Backend Image
 
 ```bash
-docker build -f backend/Dockerfile -t stutter-backend:latest .
+docker build -f backend/Dockerfile -t pacemate-backend:latest .
 ```
 
 ### Build Frontend Image
 
 ```bash
-docker build -f frontend/Dockerfile -t stutter-frontend:latest .
+docker build -f frontend/Dockerfile -t pacemate-frontend:latest .
 ```
 
 ### Run Backend Alone
@@ -70,13 +70,13 @@ docker build -f frontend/Dockerfile -t stutter-frontend:latest .
 docker run -p 4000:4000 \
   -e MIX_ENV=prod \
   -e PHX_HOST=localhost \
-  stutter-backend:latest
+  pacemate-backend:latest
 ```
 
 ### Run Frontend Alone
 
 ```bash
-docker run -p 3000:3000 stutter-frontend:latest
+docker run -p 3000:3000 pacemate-frontend:latest
 ```
 
 ---
@@ -114,15 +114,15 @@ docker run -p 3000:3000 stutter-frontend:latest
 ### Run Backend Tests
 
 ```bash
-docker build -f backend/Dockerfile -t stutter-test:latest .
-docker run stutter-test:latest mix test
+docker build -f backend/Dockerfile -t pacemate-test:latest .
+docker run pacemate-test:latest mix test
 ```
 
 ### Run Frontend Tests
 
 ```bash
-docker build -f frontend/Dockerfile -t stutter-frontend-test:latest .
-docker run stutter-frontend-test:latest npm run test
+docker build -f frontend/Dockerfile -t pacemate-frontend-test:latest .
+docker run pacemate-frontend-test:latest npm run test
 ```
 
 ### Run Both Tests
@@ -207,15 +207,15 @@ docker inspect <container-id> --format='{{.State.Health}}'
 ### Build for Production
 
 ```bash
-docker build -f backend/Dockerfile -t myregistry/stutter-backend:1.0.0 .
-docker build -f frontend/Dockerfile -t myregistry/stutter-frontend:1.0.0 .
+docker build -f backend/Dockerfile -t myregistry/pacemate-backend:1.0.0 .
+docker build -f frontend/Dockerfile -t myregistry/pacemate-frontend:1.0.0 .
 ```
 
 ### Push to Registry
 
 ```bash
-docker push myregistry/stutter-backend:1.0.0
-docker push myregistry/stutter-frontend:1.0.0
+docker push myregistry/pacemate-backend:1.0.0
+docker push myregistry/pacemate-frontend:1.0.0
 ```
 
 ### Deploy with Docker Compose
@@ -326,7 +326,7 @@ docker-compose down
 ### Remove All Images
 
 ```bash
-docker rmi stutter-backend stutter-frontend
+docker rmi pacemate-backend pacemate-frontend
 ```
 
 ### Remove Unused Resources
@@ -345,11 +345,11 @@ To deploy on Kubernetes, use the Docker images:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: stutter-backend
+  name: pacemate-backend
 spec:
   containers:
   - name: backend
-    image: myregistry/stutter-backend:latest
+    image: myregistry/pacemate-backend:latest
     ports:
     - containerPort: 4000
 ```

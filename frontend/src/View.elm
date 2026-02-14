@@ -22,8 +22,8 @@ view model =
 viewHeader : Html Msg
 viewHeader =
     header []
-        [ h1 [] [ text "Speaking Practice" ]
-        , p [ class "subtitle" ] [ text "A calm, distraction-free experience" ]
+        [ h1 [] [ text "PaceMate" ]
+        , p [ class "subtitle" ] [ text "Mindful paced speaking practice" ]
         ]
 
 
@@ -32,7 +32,7 @@ viewHeader =
 viewFooter : Html Msg
 viewFooter =
     footer []
-        [ p [] [ text "Take your time. You're doing great." ]
+        [ p [] [ text "Take your time. Find your pace. You're doing great." ]
         ]
 
 

@@ -1,4 +1,4 @@
-# Stutter-Accessibility POC - Backend
+# PaceMate-Accessibility POC - Backend
 
 Elixir/Phoenix WebSocket backend for real-time speaking practice feedback.
 

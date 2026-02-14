@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Stutter-Accessibility POC now includes AI-powered speech analysis using **Ollama** for personalized feedback on pacing, speaking clarity, and stutter tips.
+The PaceMate-Accessibility POC now includes AI-powered speech analysis using **Ollama** for personalized feedback on pacing, speaking clarity, and pacemate tips.
 
 ## Features
 
@@ -133,7 +133,7 @@ environment:
 ### AI Prompt
 
 ```
-Analyze this speech for someone with a speech stutter and provide brief, 
+Analyze this speech for someone with a speech pacemate and provide brief, 
 encouraging feedback.
 
 Speech: "[user's speech]"
@@ -384,7 +384,7 @@ ollama pull llama2
 
 - [Ollama Documentation](https://ollama.ai)
 - [Llama2 Model Card](https://huggingface.co/meta-llama/Llama-2-7b)
-- [Stutter Speech Resources](https://www.stutteringhelp.org)
+- [PaceMate Speech Resources](https://www.pacemateinghelp.org)
 - [Speech Pacing Research](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4940387/)
 
 ---
