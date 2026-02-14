@@ -27,8 +27,8 @@ FROM alpine:3.18
 
 WORKDIR /app
 
-# Install runtime dependencies
-RUN apk add --no-cache openssl libstdc++
+# Install runtime dependencies (including ncurses for Erlang)
+RUN apk add --no-cache openssl libstdc++ ncurses-libs bash
 
 # Copy release from builder
 COPY --from=builder /app/_build/prod/rel/backend ./
