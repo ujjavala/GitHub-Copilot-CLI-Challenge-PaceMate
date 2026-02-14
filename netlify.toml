@@ -3,7 +3,7 @@
   publish = "."
   command = """
     npm install && \
-    npm run build:elm && \
+    npm run build && \
     echo 'Build complete! Backend URL: ${BACKEND_URL:-pacemate-backend.fly.dev}'
   """
 

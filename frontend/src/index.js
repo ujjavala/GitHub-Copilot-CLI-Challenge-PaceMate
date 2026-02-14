@@ -1,4 +1,6 @@
-// Elm is loaded globally from dist/elm.js
+// Import Elm application
+import { Elm } from './Main.elm';
+
 const app = Elm.Main.init({ node: document.getElementById('app') });
 
 // Theme management
@@ -24,7 +26,6 @@ if (app.ports && app.ports.themeChanged) {
 
 // WebSocket connection
 let socket = null;
-let channel = null;
 
 // Speech recognition setup
 let recognition = null;
@@ -139,7 +140,6 @@ function connectToChannel() {
       ref: '1'
     };
     socket.send(JSON.stringify(joinMsg));
-    channel = 'session:user_session';
   };
 
   socket.onmessage = function (event) {
