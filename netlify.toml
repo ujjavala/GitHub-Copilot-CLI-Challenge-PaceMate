@@ -2,6 +2,10 @@
   base = "frontend"
   publish = "."
   command = """
+    curl -L -o elm.gz https://github.com/elm/compiler/releases/download/0.19.1/binary-for-linux-64-bit.gz && \
+    gunzip elm.gz && \
+    chmod +x elm && \
+    export PATH="$PWD:$PATH" && \
     npm install && \
     npm run build && \
     echo 'Build complete! Backend URL: ${BACKEND_URL:-pacemate-backend.fly.dev}'
