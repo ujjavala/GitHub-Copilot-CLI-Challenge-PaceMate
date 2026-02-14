@@ -19,7 +19,7 @@ RUN mix deps.get --only prod && mix deps.compile
 COPY backend/ .
 
 # Compile release
-RUN mix compile && \
+RUN MIX_ENV=prod mix compile && \
     MIX_ENV=prod mix release
 
 # Runtime stage
