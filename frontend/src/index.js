@@ -186,24 +186,43 @@ function analyzeClientSide(speechText, timestamps, startTime) {
   }
 
   // Analyze pacing and provide therapeutic advice
-  let pacingAdvice = '';
+  const pacingOptions = {
+    slow: [
+      'Your pacing feels comfortable and relaxed. This gentler pace gives you time to think and breathe naturally.',
+      'What a nice, steady pace. Speaking at this rate can help you feel more in control and at ease.',
+      'You\'re taking your time beautifully. This allows for relaxed breathing and reduces any pressure you might feel.'
+    ],
+    moderate: [
+      'Your pace feels natural and conversational. If you ever feel tension, you might try slowing down just a touch.',
+      'Lovely rhythm. When you\'re ready, you could explore adding a few gentle pauses between thoughts.',
+      'This is a comfortable pace. Remember, you can always slow down whenever it feels right for you.'
+    ],
+    fast: [
+      'It seems like you might be speaking a bit quickly. There\'s no rush—pauses can be your gentle friend.',
+      'You might find it helpful to slow down a little. Many people discover that a gentler pace helps them feel more relaxed.',
+      'If it feels comfortable, try speaking a bit more slowly. A slower pace often gives more time for breathing and reduces tension.'
+    ]
+  };
+
+  let pacingCategory;
   if (wordsPerMinute < 100) {
-    pacingAdvice = 'Great pacing! Your speed is comfortable and easy to follow.';
+    pacingCategory = 'slow';
   } else if (wordsPerMinute < 140) {
-    pacingAdvice = 'Good pace. Consider slowing down slightly and pausing between phrases.';
+    pacingCategory = 'moderate';
   } else {
-    pacingAdvice = 'Try slowing down your speech. Take relaxed breaths and speak on the exhale.';
+    pacingCategory = 'fast';
   }
+  let pacingAdvice = pacingOptions[pacingCategory][Math.floor(Math.random() * 3)];
 
   // Provide comprehensive therapeutic tips
   const therapeuticTips = [
-    'Remember to use gentle onsets—start words softly rather than forcing them out.',
-    'Practice light articulatory contacts: let your lips and tongue touch softly without pressure.',
-    'If you feel stuck on a word, pause, take a breath, and restart gently.',
-    'Build confidence by practicing in low-pressure situations first, like reading aloud.',
-    'Focus on communication over perfection. What matters is expressing your thoughts comfortably.',
-    'Use breathing techniques: take a relaxed breath before speaking, then talk on the exhale.',
-    'Try pausing between phrases to reduce tension and maintain a steady rhythm.'
+    'You might try using gentle onsets—starting words softly can feel more comfortable than pushing them out.',
+    'When you\'re ready, explore light articulatory contacts: let your lips and tongue touch softly, without any pressure.',
+    'If you feel stuck on a word, it\'s perfectly okay to pause, take a calm breath, and restart gently.',
+    'You could build confidence by practicing in comfortable, low-pressure moments, like reading aloud to yourself.',
+    'Remember, communication matters more than perfection. What\'s important is expressing yourself in a way that feels right.',
+    'Consider trying breathing techniques: take a relaxed breath before speaking, then let the words flow on the exhale.',
+    'Gentle pauses between phrases can help you feel more relaxed and maintain a comfortable rhythm.'
   ];
 
   // Select 2-3 random tips for variety
@@ -219,12 +238,12 @@ function analyzeClientSide(speechText, timestamps, startTime) {
 
   // Add repetition-specific advice if detected
   if (repetitionCount > 0) {
-    tipsText = `Noticed ${repetitionCount} repetition(s). When this happens, pause and breathe before continuing. ${selectedTips[0]} ${selectedTips[1]}`;
+    tipsText = `I noticed ${repetitionCount} repetition${repetitionCount > 1 ? 's' : ''}. That's completely normal. When this happens, you might gently pause and take a breath before continuing. ${selectedTips[0]} ${selectedTips[1]}`;
   }
 
   // Format response to match Elm's expected structure
   return {
-    encouragement: "You're doing great! Remember, therapy emphasizes communication and self-confidence over perfect fluency. Keep practicing and expressing yourself without fear.",
+    encouragement: "You're doing wonderfully. Remember, what matters most is communication and feeling comfortable expressing yourself. Every practice session is progress, no matter how it feels.",
     pacing: pacingAdvice,
     tips: tipsText,
     metrics: {
