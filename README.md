@@ -349,8 +349,8 @@ Areas for improvement:
 
 - No database (in-memory only)
 - No authentication
-- Simulated speech (no real audio capture)
 - Single session per browser tab
+- Browser-based speech recognition (requires Chrome/Edge)
 
 Production version would address all of these.
 
