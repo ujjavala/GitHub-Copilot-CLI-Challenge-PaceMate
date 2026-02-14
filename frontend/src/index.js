@@ -203,15 +203,19 @@ function analyzeClientSide(speechText, timestamps, startTime) {
     repetitionAdvice = 'No repetitions detected. Well done!';
   }
 
+  // Format response to match Elm's expected structure
   return {
-    wpm: wordsPerMinute,
-    word_count: wordCount,
-    duration: totalDurationSeconds.toFixed(1),
-    pace_advice: pacingAdvice,
-    repetition_advice: repetitionAdvice,
-    detected_repetitions: detectedRepetitions.slice(0, 3),
-    feedback: `${pacingAdvice} ${repetitionAdvice}`,
-    source: 'client-side'
+    encouragement: repetitionCount === 0
+      ? "Great job! Your speech was clear and fluent."
+      : "Keep practicing! You're making progress.",
+    pacing: pacingAdvice,
+    tips: repetitionAdvice,
+    metrics: {
+      words: wordCount,
+      sentences: Math.max(1, Math.ceil(wordCount / 15)), // Rough estimate
+      avg_sentence_length: Math.min(wordCount, 15),
+      estimated_wpm: wordsPerMinute
+    }
   };
 }
 
