@@ -20,9 +20,15 @@ defmodule BackendWeb.Router do
     get "/", PageController, :home
   end
 
+  scope "/api", BackendWeb do
+    pipe_through :api
+
+    get "/health", PageController, :health
+  end
+
   scope "/", BackendWeb do
     pipe_through :api
-    
+
     get "/elm-app", PageController, :elm_app
   end
 end

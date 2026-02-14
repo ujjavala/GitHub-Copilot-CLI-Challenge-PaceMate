@@ -136,11 +136,14 @@ The Elm frontend displays feedback in a calm, distraction-free card layout, keep
 - Phi3 (language model - lightweight, fast, efficient)
 - Speech metrics parser (custom Elixir logic)
 
-**DevOps**
+**DevOps & Deployment**
 - Docker (multi-stage builds for efficiency)
 - Docker Compose (local development orchestration)
 - Alpine Linux (lightweight runtime images)
 - Health checks (service dependency management)
+- Fly.io (backend hosting with auto-scaling)
+- Netlify (frontend CDN with automatic HTTPS)
+- GitHub Actions (CI/CD pipeline for auto-deployment)
 
 **Testing**
 - ExUnit (backend tests)
@@ -148,6 +151,8 @@ The Elm frontend displays feedback in a calm, distraction-free card layout, keep
 - 33+ tests covering state transitions, JSON decoding, AI logic
 
 ## Demo & Repository
+
+**Live Demo**: Coming soon on Fly.io + Netlify 🚀
 
 **Live Repository**: [GitHub - ujjavala/GitHub-Copilot-CLI-Challenge-PaceMate](https://github.com/ujjavala/GitHub-Copilot-CLI-Challenge-PaceMate)
 
@@ -157,27 +162,107 @@ The Elm frontend displays feedback in a calm, distraction-free card layout, keep
 git clone https://github.com/ujjavala/GitHub-Copilot-CLI-Challenge-PaceMate.git
 cd github-challenge
 
+# Local Development
 # With AI (requires Ollama + Phi3 model)
 docker-compose --profile ai up
-# On first run, Phi3 will download (~2GB, ~2 minutes)
 
 # Without AI (rule-based feedback only)
 docker-compose up
 
 # Then open http://localhost:3000
+
+# Production Deployment
+./scripts/deploy.sh setup    # Initial Fly.io setup
+./scripts/deploy.sh backend  # Deploy to Fly.io
+# Connect to Netlify via UI for frontend deployment
 ```
 
 **Project Structure**
 ```
 .
-├── frontend/          # Elm app + WebSocket client
-├── backend/           # Elixir/Phoenix server + AI pipeline
-├── docker-compose.yml # Local dev orchestration
-├── ARCHITECTURE.md    # Technical deep-dive
-├── FEATURES.md        # Complete feature documentation
-├── BRANDING.md        # Design system & guidelines
-└── README.md          # Quick start
+├── frontend/                    # Elm app + WebSocket client
+├── backend/                     # Elixir/Phoenix server + AI pipeline
+├── scripts/deploy.sh            # Deployment helper script
+├── fly.toml                     # Fly.io backend configuration
+├── netlify.toml                 # Netlify frontend configuration
+├── .github/workflows/           # GitHub Actions CI/CD
+├── docker-compose.yml           # Local dev orchestration
+├── ARCHITECTURE.md              # Technical deep-dive
+├── DEPLOYMENT.md                # Complete deployment guide
+├── DEPLOY_QUICKSTART.md         # 5-minute deploy guide
+└── README.md                    # Quick start
 ```
+
+## Production Deployment Architecture
+
+Getting PaceMate from local development to production required zero-compromise on the core principles: **low cost, high reliability, and privacy-first**.
+
+### Deployment Stack
+
+**Backend: Fly.io** 🪰
+- **Why Fly.io?** Elixir/Phoenix + Erlang/OTP is literally what Fly.io was built for
+- **WebSocket-native**: Full support for Phoenix Channels without additional config
+- **Auto-scaling**: Scales to zero on free tier (perfect for POC/demo)
+- **Edge deployment**: Global presence with low latency
+- **Free tier**: 3 shared VMs (256MB) + 160GB bandwidth = $0/month
+
+**Frontend: Netlify** 🌐
+- **Global CDN**: Static Elm build served from edge locations worldwide
+- **Automatic HTTPS**: SSL certificates provisioned automatically
+- **Deploy previews**: Every commit gets a preview URL
+- **Free tier**: 100GB bandwidth + 300 build minutes = $0/month
+
+**CI/CD: GitHub Actions** 🤖
+- **Auto-deploy on push**: Push to `main` → backend deploys to Fly.io
+- **Health checks**: Verify deployment before marking as complete
+- **Secrets management**: Secure API tokens via GitHub Secrets
+
+### Key Design Decisions
+
+**1. Environment-Aware WebSocket URLs**
+```javascript
+// Frontend automatically detects environment
+const isProduction = window.location.hostname !== 'localhost';
+const wsUrl = isProduction
+  ? 'wss://pacemate-backend.fly.dev/socket/websocket'
+  : 'ws://localhost:4000/socket/websocket';
+```
+
+**2. Health Check Endpoints**
+```elixir
+# Backend health check for Fly.io
+get "/api/health", PageController, :health
+# Returns: {"status":"ok","service":"pacemate-backend"}
+```
+
+**3. Zero-Config HTTPS**
+- Fly.io: Automatic TLS termination
+- Netlify: Automatic SSL certificates
+- WebSocket: Automatic upgrade to WSS in production
+
+**4. Deployment Helper Script**
+```bash
+./scripts/deploy.sh setup    # One-time Fly.io setup
+./scripts/deploy.sh backend  # Deploy backend
+./scripts/deploy.sh status   # Check deployment status
+./scripts/deploy.sh logs     # View live logs
+```
+
+### Total Production Cost: $0/month
+
+Both Fly.io and Netlify have generous free tiers that easily handle:
+- 1000+ users/month
+- Real-time WebSocket sessions
+- Global CDN distribution
+- Automatic SSL/TLS
+- Health checks and monitoring
+
+### Deployment Time
+
+From code to production:
+- **Initial setup**: ~5 minutes (one-time)
+- **Subsequent deploys**: ~2 minutes (automatic via GitHub Actions)
+- **Frontend updates**: Instant CDN invalidation
 
 ## My Experience with GitHub Copilot CLI
 
@@ -189,8 +274,10 @@ Copilot CLI was a game-changer. Here's what made the difference:
 ✅ **Enabled fast iteration** in the terminal—critical for a one-day sprint
 ✅ **Helped debug Docker errors** with specific Alpine package names
 ✅ **Generated comprehensive test cases** covering edge cases I might have missed
+✅ **Helped configure Fly.io deployment** with optimal Phoenix settings
+✅ **Suggested Netlify build commands** for Elm compilation
 
-With Copilot, I could focus on making the app feel calm, human, and supportive, not fighting boilerplate or syntax.
+With Copilot, I could focus on making the app feel calm, human, and supportive, not fighting boilerplate or syntax. Even deployment configuration became straightforward with Copilot suggesting best practices for Fly.io and Netlify.
 
 ## Challenges & Interesting Discoveries
 
@@ -254,9 +341,11 @@ Sometimes, the forgotten languages are magical. Sometimes, AI is your sidekick. 
 ## Resources & Documentation
 
 - **[ARCHITECTURE.md](./ARCHITECTURE.md)** - How everything fits together
+- **[DEPLOYMENT.md](./DEPLOYMENT.md)** - Complete deployment guide (detailed)
+- **[DEPLOY_QUICKSTART.md](./DEPLOY_QUICKSTART.md)** - Deploy in 5 minutes
 - **[FEATURES.md](./FEATURES.md)** - Complete feature breakdown
 - **[BRANDING.md](./BRANDING.md)** - Design system and visual identity
-- **[DOCKER.md](./DOCKER.md)** - Containerization & deployment
+- **[DOCKER.md](./DOCKER.md)** - Containerization & local development
 - **[TESTING.md](./TESTING.md)** - Test coverage & strategies
 - **[README.md](./README.md)** - Quick start guide
 

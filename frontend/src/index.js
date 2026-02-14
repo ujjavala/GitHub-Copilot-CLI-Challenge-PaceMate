@@ -97,7 +97,27 @@ function initSpeechRecognition() {
 }
 
 function connectToChannel() {
-  socket = new WebSocket('ws://localhost:4000/socket/websocket');
+  // Auto-detect WebSocket URL based on environment
+  const getWebSocketUrl = () => {
+    // Check if we're in production (not localhost)
+    const isProduction = window.location.hostname !== 'localhost' &&
+                        window.location.hostname !== '127.0.0.1';
+
+    if (isProduction) {
+      // Use secure WebSocket in production
+      const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+      // You can set this via environment variable or use default
+      const backendHost = window.BACKEND_URL || 'pacemate-backend.fly.dev';
+      return `${protocol}//${backendHost}/socket/websocket`;
+    } else {
+      // Use local development server
+      return 'ws://localhost:4000/socket/websocket';
+    }
+  };
+
+  const wsUrl = getWebSocketUrl();
+  console.log('[WebSocket] Connecting to:', wsUrl);
+  socket = new WebSocket(wsUrl);
 
   socket.onopen = function () {
     console.log('[WebSocket] Connected to server');

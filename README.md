@@ -127,6 +127,48 @@ When users complete speaking, they receive structured feedback:
 
 ---
 
+## 🚀 Production Deployment
+
+**Ready to deploy?** Everything is configured for Fly.io (backend) + Netlify (frontend).
+
+### Quick Deploy (5 minutes)
+
+```bash
+# 1. Deploy backend to Fly.io
+./scripts/deploy.sh setup    # First time only
+./scripts/deploy.sh backend  # Deploy!
+
+# 2. Deploy frontend to Netlify
+# Visit https://app.netlify.com/ and connect your repo
+# Configure: Base=frontend, Build=npm install && npm run build:elm, Publish=frontend
+
+# 3. Test
+curl https://pacemate-backend.fly.dev/api/health
+open https://your-site.netlify.app
+```
+
+**Total Cost:** $0/month (free tiers) ✅
+
+### Deployment Guides
+
+- **[READY_TO_DEPLOY.md](READY_TO_DEPLOY.md)** - Start here! Complete walkthrough
+- **[DEPLOY_QUICKSTART.md](DEPLOY_QUICKSTART.md)** - 5-minute deploy commands
+- **[DEPLOYMENT.md](DEPLOYMENT.md)** - Full guide with scaling, monitoring, troubleshooting
+
+### What's Included
+
+- ✅ Fly.io configuration ([fly.toml](fly.toml))
+- ✅ Netlify configuration ([netlify.toml](netlify.toml))
+- ✅ GitHub Actions CI/CD ([.github/workflows/deploy-backend.yml](.github/workflows/deploy-backend.yml))
+- ✅ Deployment helper script ([scripts/deploy.sh](scripts/deploy.sh))
+- ✅ Auto-detecting WebSocket URLs (local/production)
+- ✅ Health check endpoints
+- ✅ Auto-scaling (scale to zero on free tier)
+
+**Push to `main` = Auto-deploy to production** 🎉
+
+---
+
 ## 🏗️ Architecture
 
 ### State Machine (Frontend)

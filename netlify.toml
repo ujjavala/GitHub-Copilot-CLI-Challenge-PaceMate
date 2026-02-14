@@ -1,0 +1,42 @@
+[build]
+  base = "frontend"
+  publish = "."
+  command = """
+    npm install && \
+    npm run build:elm && \
+    echo 'Build complete! Backend URL: ${BACKEND_URL:-pacemate-backend.fly.dev}'
+  """
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[build.environment]
+  NODE_VERSION = "20"
+  ELM_VERSION = "0.19.1"
+  # Set this in Netlify UI: Site Settings -> Environment Variables
+  # BACKEND_URL = "pacemate-backend.fly.dev"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "no-referrer"
+    Permissions-Policy = "accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()"
+
+[[headers]]
+  for = "/dist/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*.css"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*.js"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"

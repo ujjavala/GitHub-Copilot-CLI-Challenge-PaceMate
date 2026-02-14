@@ -33,8 +33,9 @@ RUN apk add --no-cache openssl libstdc++ ncurses-libs ncurses-terminfo-base bash
 # Copy release from builder
 COPY --from=builder /app/_build/prod/rel/backend ./
 
-# Expose port
+# Expose port (will use PORT env var, default 4000 for local, 8080 for Fly.io)
 EXPOSE 4000
+EXPOSE 8080
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=40s --retries=3 \

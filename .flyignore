@@ -1,0 +1,53 @@
+# Fly.io deployment ignore file
+# Excludes files from being uploaded to Fly.io during deployment
+
+# Frontend (not needed for backend deployment)
+frontend/
+node_modules/
+
+# Git
+.git/
+.gitignore
+
+# Documentation
+*.md
+!README.md
+docs/
+
+# Development
+.vscode/
+.idea/
+.elixir_ls/
+
+# Testing
+backend/test/
+tests/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
+.env.*
+
+# Build artifacts (will be rebuilt)
+backend/_build/
+backend/deps/
+backend/assets/node_modules/
+
+# Logs
+*.log
+erl_crash.dump
+
+# Docker
+docker-compose.yml
+Dockerfile
+backend/Dockerfile
+frontend/Dockerfile
+
+# Scripts
+scripts/
+
+# CI/CD
+.github/
