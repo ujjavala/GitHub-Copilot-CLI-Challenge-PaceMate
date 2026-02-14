@@ -1,0 +1,20 @@
+{
+  "name": "stutter-poc-frontend",
+  "version": "1.0.0",
+  "description": "Elm frontend for stutter accessibility POC",
+  "scripts": {
+    "dev": "webpack serve --mode development",
+    "build": "webpack --mode production"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "elm": "^0.19.1",
+    "elm-hot": "^1.1.6",
+    "elm-webpack-loader": "^7.0.1",
+    "webpack": "^5.89.0",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^4.15.1"
+  }
+}

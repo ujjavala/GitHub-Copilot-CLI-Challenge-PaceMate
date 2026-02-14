@@ -1,0 +1,90 @@
+# Dependencies
+backend/deps/
+backend/_build/
+frontend/node_modules/
+node_modules/
+package-lock.json
+npm-debug.log*
+
+# Elm
+frontend/elm-stuff/
+frontend/dist/
+frontend/*.js
+
+# Elixir
+*.beam
+*.ez
+/erl_crash.dump
+.elixir_ls/
+.erlang.mk/
+ebin/
+*.app
+*.app.src
+*.erl
+.mix/
+build/
+dist/
+
+# IDE & Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+.sublime-project
+.sublime-workspace
+*.iml
+.env.local
+.env.*.local
+
+# Testing
+coverage/
+.nyc_output/
+/test/coverage
+*.lcov
+
+# Build & Dist
+dist/
+build/
+*.o
+*.so
+*.dylib
+*.dll
+*.exe
+
+# Logs
+*.log
+npm-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Environment
+.env
+.env.local
+.env.*.local
+.env.production.local
+
+# Docker
+.dockerignore
+docker-compose.override.yml
+
+# Ollama
+ollama_data/
+.ollama/
+
+# Project specific
+.erlang.mk
+rel/
+priv/
+tags
+TAGS
