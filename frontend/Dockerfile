@@ -5,7 +5,7 @@ WORKDIR /app
 
 # Install dependencies
 COPY frontend/package*.json ./
-RUN npm ci
+RUN npm install --legacy-peer-deps
 
 # Install Elm
 RUN npm install -D elm
