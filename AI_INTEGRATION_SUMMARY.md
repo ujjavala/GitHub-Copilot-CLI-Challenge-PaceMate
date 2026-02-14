@@ -7,7 +7,7 @@
 
 Provides:
 - ✅ Speech metrics calculation (words, sentences, WPM)
-- ✅ Ollama integration with Llama2
+- ✅ Ollama integration with Phi3
 - ✅ Structured feedback generation
 - ✅ Graceful fallback when AI unavailable
 - ✅ Pacing-based recommendations
@@ -220,7 +220,7 @@ Tests:
 ### Optimization Options
 
 1. **Model selection** - Smaller = faster
-   - `llama2` (7B) - ~1-2s
+   - `phi3` (3.8B) - ~500ms-1s (current choice)
    - `mistral` (7B) - ~1s
    - `neural-chat` (7B) - ~1s
 

@@ -337,7 +337,7 @@ python3 -m http.server 3000
 **3. Ollama (Optional)**
 ```bash
 # Install from https://ollama.ai
-ollama pull llama2
+ollama pull phi3
 ollama serve
 # Runs on http://localhost:11434
 ```

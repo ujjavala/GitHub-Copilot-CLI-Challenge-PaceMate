@@ -57,10 +57,11 @@
 - **Fault-Tolerant** - Graceful error handling and fallbacks
 - **In-Memory** - Session state stored in process memory
 
-### AI Integration (Ollama + Llama2)
+### AI Integration (Ollama + Phi3)
 - **Local Processing** - Runs on user's machine, no cloud dependency
 - **Private** - All data stays local, no external API calls
 - **Free** - No API costs, open-source LLM
+- **Lightweight** - Phi3 (3.8B) is fast and efficient
 - **Customizable** - Easy to modify prompts and feedback logic
 - **Fallback** - Works without AI using rule-based tips
 - **Optional** - AI is enhancement, not requirement
@@ -81,11 +82,12 @@
 1. **Start** - Click "Start Session" button
 2. **Breathe** - See breathing prompt with gentle pulse animation
 3. **Prepare** - See speaking prompt and tips
-4. **Speak** - Record or simulate speaking (future: real audio)
-5. **Finish** - Click "I'm done" when finished
-6. **Analyze** - Backend analyzes speech in real-time
-7. **Receive** - See beautiful feedback card with personalized insights
-8. **Repeat** - Click "Practice again" to loop
+4. **Speak** - Real-time Web Speech API transcription (browser-based)
+5. **Finish** - Click "I'm done" when finished speaking
+6. **Transcribe** - Browser converts speech to text automatically
+7. **Analyze** - Backend analyzes transcribed speech in real-time
+8. **Receive** - See beautiful feedback card with personalized insights
+9. **Repeat** - Click "Practice again" to loop
 
 ### Feedback Display
 ```

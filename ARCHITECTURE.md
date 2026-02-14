@@ -5,7 +5,8 @@
 PaceMate is a proof of concept demonstrating a real-time, calm speaking practice application using:
 - **Frontend**: Elm (type-safe state management, beautiful UI)
 - **Backend**: Elixir/Phoenix (concurrent WebSocket handling, feedback generation)
-- **AI**: Ollama/Llama2 (local LLM for personalized pacing analysis)
+- **Speech**: Web Speech API (browser-based real-time transcription)
+- **AI**: Ollama/Phi3 (local LLM for personalized pacing analysis)
 - **Communication**: Phoenix Channels via WebSocket
 
 ## Application Flow

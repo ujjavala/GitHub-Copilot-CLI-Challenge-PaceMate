@@ -2,7 +2,11 @@
 
 ## Overview
 
-The PaceMate-Accessibility POC now includes AI-powered speech analysis using **Ollama** for personalized feedback on pacing, speaking clarity, and pacemate tips.
+The PaceMate POC includes two complementary features:
+1. **Web Speech API** - Browser-based real-time speech transcription
+2. **Ollama AI Analysis** - Local LLM (Phi3) for personalized feedback
+
+When a user speaks, the browser transcribes their voice using **Web Speech API**, sends the text to the backend, which analyzes it with both metrics calculation and **Ollama** for personalized feedback on pacing, speaking clarity, and practice tips.
 
 ## Features
 
@@ -10,7 +14,7 @@ The PaceMate-Accessibility POC now includes AI-powered speech analysis using **O
 
 When a user completes speaking:
 1. **Pacing Analysis** - Calculates estimated WPM and sentence structure
-2. **AI Feedback** - Uses Llama2 via Ollama to generate personalized tips
+2. **AI Feedback** - Uses Phi3 via Ollama to generate personalized tips
 3. **Metrics Display** - Shows detailed speech metrics
 4. **Encouragement** - Provides warm, supportive feedback
 
@@ -72,7 +76,10 @@ Ollama is a simple way to run large language models (LLMs) locally:
 docker-compose --profile ai up
 ```
 
-This includes Ollama service. Models are automatically downloaded on first use.
+This includes Ollama service with Phi3 model. On first run:
+- Phi3 (3.8B model) is automatically downloaded (~2GB, ~2 minutes)
+- All services start in dependency order
+- Access app at http://localhost:3000
 
 **Option 2: Manual Installation**
 
@@ -81,7 +88,7 @@ This includes Ollama service. Models are automatically downloaded on first use.
 ollama serve
 
 # In another terminal, pull model
-ollama pull llama2
+ollama pull phi3
 ```
 
 ### Configuration
@@ -212,7 +219,7 @@ open http://localhost:3000
 ```
 
 Services start in order:
-1. Ollama (downloads llama2 model on first start)
+1. Ollama (downloads phi3 model on first start, ~2GB, ~2 minutes)
 2. Backend (waits for Ollama healthy)
 3. Frontend (waits for backend healthy)
 
@@ -221,6 +228,7 @@ Services start in order:
 **Terminal 1 - Ollama:**
 ```bash
 ollama serve
+# On first run: ollama pull phi3 (downloads ~2GB model)
 # Wait for "listening on 127.0.0.1:11434"
 ```
 
