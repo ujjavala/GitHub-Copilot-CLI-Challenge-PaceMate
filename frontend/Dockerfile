@@ -1,14 +1,7 @@
-# Build stage
-FROM node:20-alpine AS builder
+# Build stage - Compile Elm with dedicated Elm image
+FROM elm:latest AS elm-builder
 
 WORKDIR /app
-
-# Install Elm from Alpine package manager (avoids npm binary download issues)
-RUN apk add --no-cache elm
-
-# Install Node dependencies
-COPY frontend/package*.json ./
-RUN npm install --legacy-peer-deps --ignore-scripts
 
 # Copy Elm source
 COPY frontend/src ./src
@@ -25,8 +18,8 @@ WORKDIR /app
 # Install serve to run static files
 RUN npm install -g serve
 
-# Copy compiled files
-COPY --from=builder /app/dist ./dist
+# Copy compiled Elm output
+COPY --from=elm-builder /app/dist ./dist
 COPY frontend/index.html .
 
 # Expose port
