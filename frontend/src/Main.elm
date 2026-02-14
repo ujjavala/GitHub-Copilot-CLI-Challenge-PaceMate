@@ -19,10 +19,10 @@ main =
         }
 
 
-{-| Initialize application with idle state
+{-| Initialize application with idle state and light theme
 -}
 init : () -> ( Model, Cmd Msg )
 init () =
-    ( { state = Types.Idle, feedback = Nothing }
+    ( { state = Types.Idle, feedback = Nothing, theme = Types.Light }
     , Cmd.none
     )

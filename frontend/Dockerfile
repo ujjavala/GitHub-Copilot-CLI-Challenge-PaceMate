@@ -6,9 +6,11 @@ WORKDIR /app
 # Install serve to run static files
 RUN npm install -g serve
 
-# Copy compiled Elm output and HTML
+# Copy compiled Elm output, HTML, CSS, and JS
 COPY frontend/dist ./dist
+COPY frontend/src ./src
 COPY frontend/index.html .
+COPY frontend/styles.css .
 
 # Expose port
 EXPOSE 3000

@@ -23,12 +23,12 @@ RUN mix compile && \
     MIX_ENV=prod mix release
 
 # Runtime stage
-FROM alpine:3.18
+FROM alpine:3.23
 
 WORKDIR /app
 
 # Install runtime dependencies (including ncurses for Erlang)
-RUN apk add --no-cache openssl libstdc++ ncurses-libs bash
+RUN apk add --no-cache openssl libstdc++ ncurses-libs ncurses-terminfo-base bash
 
 # Copy release from builder
 COPY --from=builder /app/_build/prod/rel/backend ./

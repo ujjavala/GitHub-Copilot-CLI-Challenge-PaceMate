@@ -1,4 +1,4 @@
-module Types exposing (State(..), Model, Msg(..), Feedback, Metrics)
+module Types exposing (State(..), Model, Msg(..), Feedback, Metrics, Theme(..))
 
 
 {-| Session state machine states
@@ -31,11 +31,19 @@ type alias Metrics =
     }
 
 
+{-| Theme preference
+-}
+type Theme
+    = Light
+    | Dark
+
+
 {-| Application model containing session state and feedback
 -}
 type alias Model =
     { state : State
     , feedback : Maybe Feedback
+    , theme : Theme
     }
 
 
@@ -47,4 +55,5 @@ type Msg
     | ClickPrompt
     | ClickDone
     | ClickRestart
+    | ToggleTheme
     | ReceiveFeedback (Result String Feedback)

@@ -95,25 +95,32 @@ defmodule Backend.AI.SpeechAnalysis do
     ollama_host = System.get_env("OLLAMA_HOST") || "http://localhost:11434"
 
     prompt = """
-    Analyze this speech for someone who has a speech stutter and provide brief, encouraging feedback.
-    
+    You are an AI speech coach helping someone practice their speaking fluency. Analyze this speech and provide helpful, supportive feedback.
+
     Speech: "#{speech_text}"
-    
+
     Metrics:
     - Words: #{metrics.words}
     - Sentences: #{metrics.sentences}
     - Avg words per sentence: #{Float.round(metrics.avg_sentence_length, 2)}
     - Estimated WPM: #{Float.round(metrics.estimated_wpm, 2)}
-    
+
+    Provide feedback using common fluency practice techniques. Focus on:
+    - Gentle onset (starting sounds softly)
+    - Light articulatory contact (reducing tension in lips, tongue, jaw)
+    - Continuous airflow and breath support
+    - Pausing and phrasing strategies
+    - Rate control techniques
+
     Provide feedback in this exact format:
-    TIPS: [2-3 specific, actionable tips for pacing and clarity]
-    ENCOURAGEMENT: [brief, warm encouragement]
+    TIPS: [2-3 specific practice techniques like gentle onset, light contact, easy onset, or pacing strategies]
+    ENCOURAGEMENT: [brief, warm encouragement that acknowledges the effort of practicing]
     """
 
     case HTTPoison.post(
            "#{ollama_host}/api/generate",
            Jason.encode!(%{
-             model: "llama2",
+             model: "phi3",
              prompt: prompt,
              stream: false
            }),
@@ -194,22 +201,22 @@ defmodule Backend.AI.SpeechAnalysis do
 
     tips =
       if wpm > 150,
-        do: tips ++ ["Try speaking more slowly and deliberately"],
+        do: tips ++ ["Practice gentle onset - start each phrase with soft, easy sounds", "Use light articulatory contact to reduce tension"],
         else: tips
 
     tips =
       if wpm < 80,
-        do: tips ++ ["You can speak with more confidence"],
+        do: tips ++ ["Focus on continuous airflow while speaking", "Try smooth, connected speech with easy transitions"],
         else: tips
 
     tips =
       if sentences < 2,
-        do: tips ++ ["Break your response into multiple sentences"],
+        do: tips ++ ["Use natural pausing between phrases to support your breath"],
         else: tips
 
     tips =
       if Enum.empty?(tips),
-        do: ["Maintain your current pace", "Your clarity is excellent"],
+        do: ["Maintain light articulatory contact", "Continue using gentle onset techniques", "Your fluency control is working well"],
         else: tips
 
     (tips |> Enum.join(". ")) <> "."

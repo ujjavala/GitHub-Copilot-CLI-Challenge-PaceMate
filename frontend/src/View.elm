@@ -3,27 +3,86 @@ module View exposing (view)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
-import Types exposing (State(..), Model, Msg(..), Feedback, Metrics)
+import Types exposing (State(..), Model, Msg(..), Feedback, Metrics, Theme(..))
 
 
 {-| Main view rendering application state
 -}
 view : Model -> Html Msg
 view model =
-    div [ class "app" ]
-        [ viewHeader
-        , main_ [] [ viewStateContent model ]
+    let
+        themeClass =
+            case model.theme of
+                Light ->
+                    "theme-light"
+
+                Dark ->
+                    "theme-dark"
+    in
+    div [ class ("app " ++ themeClass) ]
+        [ viewHeader model.theme
+        , div [ class "main-container" ]
+            [ viewHeroSection
+            , main_ [] [ viewStateContent model ]
+            ]
         , viewFooter
         ]
 
 
 {-| Application header
 -}
-viewHeader : Html Msg
-viewHeader =
+viewHeader : Theme -> Html Msg
+viewHeader theme =
     header []
-        [ h1 [] [ text "PaceMate" ]
-        , p [ class "subtitle" ] [ text "Mindful paced speaking practice" ]
+        [ div [ class "header-content" ]
+            [ div [ class "header-text" ]
+                [ h1 [] [ text "PaceMate" ]
+                , p [ class "subtitle" ] [ text "Mindful paced speaking practice" ]
+                ]
+            , button [ class "theme-toggle", onClick ToggleTheme, title "Toggle theme" ]
+                [ i
+                    [ class
+                        (case theme of
+                            Light ->
+                                "fas fa-moon"
+
+                            Dark ->
+                                "fas fa-sun"
+                        )
+                    ]
+                    []
+                ]
+            ]
+        ]
+
+
+{-| Hero section with features and benefits
+-}
+viewHeroSection : Html Msg
+viewHeroSection =
+    div [ class "hero-section" ]
+        [ div [ class "hero-content" ]
+            [ h2 [ class "hero-title" ] [ text "Practice Pacing Your Speech" ]
+            , p [ class "hero-description" ]
+                [ text "Get real-time AI-powered feedback to help improve your speaking pace and fluency. Practice with personalized guidance." ]
+            , div [ class "hero-features" ]
+                [ viewFeature "fa-microphone" "Real-time Analysis" "Your speech is analyzed as you practice"
+                , viewFeature "fa-brain" "AI Speech Coach" "AI-powered guidance for fluency practice"
+                , viewFeature "fa-chart-line" "Track Progress" "Monitor your improvement over time"
+                ]
+            ]
+        ]
+
+
+{-| Individual feature item
+-}
+viewFeature : String -> String -> String -> Html Msg
+viewFeature iconClass title description =
+    div [ class "feature-item" ]
+        [ div [ class "feature-icon" ]
+            [ i [ class ("fas " ++ iconClass) ] [] ]
+        , h3 [ class "feature-title" ] [ text title ]
+        , p [ class "feature-description" ] [ text description ]
         ]
 
 
@@ -32,7 +91,7 @@ viewHeader =
 viewFooter : Html Msg
 viewFooter =
     footer []
-        [ p [] [ text "Take your time. Find your pace. You're doing great." ]
+        [ p [] [ text "Mindful communication practice" ]
         ]
 
 
@@ -73,14 +132,14 @@ viewIdleState =
         ]
 
 
-{-| Breathing state: calm breathing prompt with animation
+{-| Breathing state: calm breathing prompt with pulsing heart animation
 -}
 viewBreathingState : Html Msg
 viewBreathingState =
     div [ class "state breathing" ]
         [ h2 [] [ text "Take a moment to breathe" ]
         , div [ class "icon-container breathing-animation" ]
-            [ i [ class "fas fa-circle" ] [] ]
+            [ i [ class "fas fa-heart" ] [] ]
         , p [] [ text "Breathe gently. There's no rush." ]
         , div [ class "button-group" ]
             [ button [ class "btn btn-secondary", onClick ClickBreathing ]
@@ -135,7 +194,10 @@ viewSpeakingState =
 viewFeedbackState : Maybe Feedback -> Html Msg
 viewFeedbackState maybeFeedback =
     div [ class "state feedback" ]
-        [ h2 [] [ text "Great job! 🎉" ]
+        [ h2 [ class "feedback-title" ]
+            [ i [ class "fas fa-star feedback-star-icon" ] []
+            , text "Great job!"
+            ]
         , case maybeFeedback of
             Just feedback ->
                 div [ class "feedback-container" ]
@@ -162,9 +224,9 @@ viewFeedbackState maybeFeedback =
 viewFeedbackCard : Feedback -> Html Msg
 viewFeedbackCard feedback =
     div [ class "feedback-card" ]
-        [ viewFeedbackSection "💬 Encouragement" feedback.encouragement "encouragement"
-        , viewFeedbackSection "⏱️ Pacing Analysis" feedback.pacing "pacing"
-        , viewFeedbackSection "💡 Tips for Improvement" feedback.tips "tips"
+        [ viewFeedbackSection "Encouragement" "fa-heart" feedback.encouragement "encouragement"
+        , viewFeedbackSection "Pacing Analysis" "fa-gauge" feedback.pacing "pacing"
+        , viewFeedbackSection "Tips for Improvement" "fa-lightbulb" feedback.tips "tips"
         , case feedback.metrics of
             Just metrics ->
                 viewMetricsSection metrics
@@ -176,10 +238,13 @@ viewFeedbackCard feedback =
 
 {-| Individual feedback section
 -}
-viewFeedbackSection : String -> String -> String -> Html Msg
-viewFeedbackSection title content sectionClass =
+viewFeedbackSection : String -> String -> String -> String -> Html Msg
+viewFeedbackSection title iconClass content sectionClass =
     div [ class ("feedback-section " ++ sectionClass) ]
-        [ h3 [ class "feedback-section-title" ] [ text title ]
+        [ h3 [ class "feedback-section-title" ]
+            [ i [ class ("fas " ++ iconClass) ] []
+            , text title
+            ]
         , p [ class "feedback-section-content" ] [ text content ]
         ]
 
@@ -189,7 +254,10 @@ viewFeedbackSection title content sectionClass =
 viewMetricsSection : Metrics -> Html Msg
 viewMetricsSection metrics =
     div [ class "feedback-section metrics" ]
-        [ h3 [ class "feedback-section-title" ] [ text "📊 Speech Metrics" ]
+        [ h3 [ class "feedback-section-title" ]
+            [ i [ class "fas fa-chart-bar" ] []
+            , text "Speech Metrics"
+            ]
         , div [ class "metrics-grid" ]
             [ viewMetricItem "Words" (String.fromInt metrics.words)
             , viewMetricItem "Sentences" (String.fromInt metrics.sentences)

@@ -9,13 +9,16 @@ services:
       - "4000:4000"
     environment:
       - MIX_ENV=prod
+      - PHX_SERVER=true
       - PHX_HOST=localhost
       - PHX_PORT=4000
-      - SECRET_KEY_BASE=changeme_insecure_key_for_dev_only
+      - PORT=4000
+      - SECRET_KEY_BASE=K6XE/MVtBw8E4WmnC9kIA7w8DR1mNC4jg1AigxM6L9WPqOqHY2A4j+qclEVgzYviv8IYpGN7MHZsxCXZrB2SCw==
       - OLLAMA_HOST=http://ollama:11434
     depends_on:
       ollama:
-        condition: service_started
+        condition: service_healthy
+        required: false
     healthcheck:
       test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:4000"]
       interval: 30s
@@ -55,10 +58,10 @@ services:
       - ollama_data:/root/.ollama
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:11434/api/tags"]
-      interval: 30s
+      interval: 15s
       timeout: 10s
-      retries: 5
-      start_period: 40s
+      retries: 10
+      start_period: 30s
     networks:
       - pacemate_network
     command: serve

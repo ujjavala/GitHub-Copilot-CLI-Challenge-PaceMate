@@ -1,7 +1,7 @@
-port module Update exposing (update, send)
+port module Update exposing (update, send, themeChanged)
 
 import Json.Encode as Encode
-import Types exposing (State(..), Model, Msg(..), Feedback)
+import Types exposing (State(..), Model, Msg(..), Feedback, Theme(..))
 
 
 {-| Pure update function implementing state machine logic
@@ -21,7 +21,7 @@ update msg model =
 
         ClickPrompt ->
             ( { model | state = Speaking }
-            , Cmd.none
+            , sendStartSpeaking ()
             )
 
         ClickDone ->
@@ -45,6 +45,43 @@ update msg model =
             ( { model | state = Idle, feedback = Nothing }
             , sendRestartSession ()
             )
+
+        ToggleTheme ->
+            let
+                newTheme =
+                    case model.theme of
+                        Light ->
+                            Dark
+
+                        Dark ->
+                            Light
+
+                themeString =
+                    case newTheme of
+                        Light ->
+                            "Light"
+
+                        Dark ->
+                            "Dark"
+            in
+            ( { model | theme = newTheme }
+            , themeChanged themeString
+            )
+
+
+{-| Send "start_speaking" message to JavaScript to start microphone
+-}
+sendStartSpeaking : () -> Cmd Msg
+sendStartSpeaking () =
+    let
+        message =
+            Encode.object
+                [ ( "topic", Encode.string "session:user_session" )
+                , ( "event", Encode.string "start_speaking" )
+                , ( "payload", Encode.object [] )
+                ]
+    in
+    send message
 
 
 {-| Send "finished_speaking" message to backend
@@ -80,3 +117,8 @@ sendRestartSession () =
 {-| External port for sending WebSocket messages
 -}
 port send : Encode.Value -> Cmd msg
+
+
+{-| Port for notifying JavaScript about theme changes
+-}
+port themeChanged : String -> Cmd msg
