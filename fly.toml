@@ -35,7 +35,7 @@ kill_signal = 'SIGTERM'
     grace_period = '30s'
     method = 'GET'
     path = '/api/health'
-    protocol = 'http'
+    protocol = 'https'
 
 [[vm]]
   memory = '256mb'
