@@ -4,7 +4,10 @@ A sophisticated proof of concept for a mindful speaking practice companion with 
 
 ## 🎬 Demo Video
 
-https://github.com/ujjavala/GitHub-Copilot-CLI-Challenge-PaceMate/assets/Pacemate_Demo.mp4
+<video width="640" height="480" controls>
+  <source src="Pacemate_Demo.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
 
 ## ⚡ TL;DR - Quick Start
 
