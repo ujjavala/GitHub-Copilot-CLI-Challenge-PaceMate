@@ -2,6 +2,10 @@
 
 A sophisticated proof of concept for a mindful speaking practice companion with **AI-powered feedback**, built with **Elm frontend** and **Elixir/Phoenix backend** for real-time, calm interaction.
 
+## 🎬 Demo Video
+
+https://github.com/ujjavala/GitHub-Copilot-CLI-Challenge-PaceMate/assets/Pacemate_Demo.mp4
+
 ## ⚡ TL;DR - Quick Start
 
 **Prerequisites:** Docker, or (Elixir + Node.js)
@@ -29,9 +33,9 @@ cd frontend && python3 -m http.server 3000
 
 Then:
 1. Click **"Start Session"**
-2. See breathing animation → Click **"Ready"**
-3. See speaking prompt → Click **"Start"**
-4. See "Analyzing..." → Click **"Done"**
+2. See breathing animation → Click **"I'm Ready"**
+3. See speaking prompt → Click **"Start Speaking"**
+4. See "Analyzing..." → Click **"I'm done"**
 5. Get beautiful AI feedback with metrics
 6. Click **"Practice Again"** to repeat
 
