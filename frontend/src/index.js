@@ -185,31 +185,48 @@ function analyzeClientSide(speechText, timestamps, startTime) {
     }
   }
 
-  // Analyze pacing and provide advice
+  // Analyze pacing and provide therapeutic advice
   let pacingAdvice = '';
   if (wordsPerMinute < 100) {
     pacingAdvice = 'Great pacing! Your speed is comfortable and easy to follow.';
   } else if (wordsPerMinute < 140) {
-    pacingAdvice = 'Good pace. You might want to slow down slightly for clarity.';
+    pacingAdvice = 'Good pace. Consider slowing down slightly and pausing between phrases.';
   } else {
-    pacingAdvice = 'Try slowing down. Speaking more slowly can help reduce stuttering.';
+    pacingAdvice = 'Try slowing down your speech. Take relaxed breaths and speak on the exhale.';
   }
 
-  let repetitionAdvice = '';
+  // Provide comprehensive therapeutic tips
+  const therapeuticTips = [
+    'Remember to use gentle onsets—start words softly rather than forcing them out.',
+    'Practice light articulatory contacts: let your lips and tongue touch softly without pressure.',
+    'If you feel stuck on a word, pause, take a breath, and restart gently.',
+    'Build confidence by practicing in low-pressure situations first, like reading aloud.',
+    'Focus on communication over perfection. What matters is expressing your thoughts comfortably.',
+    'Use breathing techniques: take a relaxed breath before speaking, then talk on the exhale.',
+    'Try pausing between phrases to reduce tension and maintain a steady rhythm.'
+  ];
+
+  // Select 2-3 random tips for variety
+  const selectedTips = [];
+  const tipIndices = new Set();
+  while (tipIndices.size < 3) {
+    tipIndices.add(Math.floor(Math.random() * therapeuticTips.length));
+  }
+  tipIndices.forEach(index => selectedTips.push(therapeuticTips[index]));
+
   const repetitionCount = detectedRepetitions.length;
+  let tipsText = selectedTips.join(' ');
+
+  // Add repetition-specific advice if detected
   if (repetitionCount > 0) {
-    repetitionAdvice = `Noticed ${repetitionCount} repetition(s). Take a breath before difficult words.`;
-  } else {
-    repetitionAdvice = 'No repetitions detected. Well done!';
+    tipsText = `Noticed ${repetitionCount} repetition(s). When this happens, pause and breathe before continuing. ${selectedTips[0]} ${selectedTips[1]}`;
   }
 
   // Format response to match Elm's expected structure
   return {
-    encouragement: repetitionCount === 0
-      ? "Great job! Your speech was clear and fluent."
-      : "Keep practicing! You're making progress.",
+    encouragement: "You're doing great! Remember, therapy emphasizes communication and self-confidence over perfect fluency. Keep practicing and expressing yourself without fear.",
     pacing: pacingAdvice,
-    tips: repetitionAdvice,
+    tips: tipsText,
     metrics: {
       words: wordCount,
       sentences: Math.max(1, Math.ceil(wordCount / 15)), // Rough estimate

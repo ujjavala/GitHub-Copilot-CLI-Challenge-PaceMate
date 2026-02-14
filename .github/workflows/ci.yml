@@ -36,13 +36,13 @@ jobs:
       - name: Check for build artifacts
         working-directory: frontend
         run: |
-          if [ ! -f "dist/elm.js" ]; then
-            echo "Error: elm.js not found after build"
+          if [ ! -f "dist/main.js" ]; then
+            echo "Error: main.js not found after build"
             echo "Contents of dist directory:"
             ls -la dist/ || echo "dist directory doesn't exist"
             exit 1
           fi
-          echo "✓ Frontend build successful - elm.js created"
+          echo "✓ Frontend build successful - main.js created"
 
   test-backend:
     name: Test Backend
