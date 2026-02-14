@@ -53,7 +53,7 @@ viewStateContent model =
         Speaking ->
             viewSpeakingState
 
-        Feedback ->
+        FeedbackState ->
             viewFeedbackState model.feedback
 
 

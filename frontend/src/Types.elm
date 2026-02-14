@@ -1,4 +1,4 @@
-module Types exposing (State(..), Model, Msg(..), Feedback)
+module Types exposing (State(..), Model, Msg(..), Feedback, Metrics)
 
 
 {-| Session state machine states
@@ -8,7 +8,7 @@ type State
     | Breathing
     | Prompt
     | Speaking
-    | Feedback
+    | FeedbackState
 
 
 {-| Detailed feedback from AI or backend

@@ -1,4 +1,4 @@
-module Update exposing (update)
+port module Update exposing (update, send)
 
 import Json.Encode as Encode
 import Types exposing (State(..), Model, Msg(..), Feedback)
@@ -25,7 +25,7 @@ update msg model =
             )
 
         ClickDone ->
-            ( { model | state = Feedback, feedback = Nothing }
+            ( { model | state = FeedbackState, feedback = Nothing }
             , sendFinishedSpeaking ()
             )
 

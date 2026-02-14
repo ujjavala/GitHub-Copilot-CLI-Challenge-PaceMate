@@ -1,16 +1,4 @@
-# Build stage - Compile Elm with dedicated Elm image
-FROM elm:latest AS elm-builder
-
-WORKDIR /app
-
-# Copy Elm source
-COPY frontend/src ./src
-COPY frontend/elm.json .
-
-# Compile Elm
-RUN elm make src/Main.elm --output dist/elm.js
-
-# Runtime stage
+# Runtime stage - serve pre-compiled Elm
 FROM node:20-alpine
 
 WORKDIR /app
@@ -18,8 +6,8 @@ WORKDIR /app
 # Install serve to run static files
 RUN npm install -g serve
 
-# Copy compiled Elm output
-COPY --from=elm-builder /app/dist ./dist
+# Copy compiled Elm output and HTML
+COPY frontend/dist ./dist
 COPY frontend/index.html .
 
 # Expose port
