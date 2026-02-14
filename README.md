@@ -4,12 +4,9 @@ A sophisticated proof of concept for a mindful speaking practice companion with 
 
 ## 🎬 Demo Video
 
-<video width="100%" controls style="max-width: 800px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-  <source src="Pacemate_Demo.mp4" type="video/mp4">
-  Your browser does not support the video tag. <a href="Pacemate_Demo.mp4">Download the demo video</a>
-</video>
+[![Play Demo Video](https://img.shields.io/badge/▶️%20Play%20Demo%20Video-blue?style=for-the-badge&logoColor=white)](Pacemate_Demo.mp4)
 
-**[▶️ Click here if video doesn't load](Pacemate_Demo.mp4)** (MP4, 1.7MB)
+**[Download demo video](Pacemate_Demo.mp4)** (MP4, 7.2MB) - Click above or the link to view the demo in action
 
 ## ⚡ TL;DR - Quick Start
 
