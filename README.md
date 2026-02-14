@@ -6,7 +6,7 @@ A sophisticated proof of concept for a mindful speaking practice companion with 
 
 [![Watch demo](https://img.shields.io/badge/Watch-Demo%20Video-blue?style=for-the-badge&logo=youtube)](Pacemate_Demo.mp4)
 
-**[▶️ Click here to play demo video](Pacemate_Demo.mp4)** (MP4, 13MB)
+**[▶️ Click here to play demo video](Pacemate_Demo.mp4)** (MP4, 1.7MB)
 
 Or view the raw file:
 ```
