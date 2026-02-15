@@ -1,4 +1,4 @@
-port module Update exposing (update, send, themeChanged, fetchAnalytics)
+port module Update exposing (update, send, themeChanged, fetchAnalytics, fetchSessionHistory)
 
 import Json.Encode as Encode
 import Types exposing (State(..), Model, Msg(..), Feedback, Theme(..), Page(..))
@@ -94,6 +94,23 @@ update msg model =
                     , Cmd.none
                     )
 
+        SelectWidget widgetType ->
+            ( { model | selectedWidget = Just widgetType }
+            , fetchSessionHistory ()
+            )
+
+        ReceiveSessionHistory result ->
+            case result of
+                Ok history ->
+                    ( { model | sessionHistory = history }
+                    , Cmd.none
+                    )
+
+                Err _ ->
+                    ( model
+                    , Cmd.none
+                    )
+
 
 {-| Send "start_speaking" message to JavaScript to start microphone
 -}
@@ -153,3 +170,8 @@ port themeChanged : String -> Cmd msg
 {-| Port for fetching analytics data from backend
 -}
 port fetchAnalytics : () -> Cmd msg
+
+
+{-| Port for fetching session history from backend
+-}
+port fetchSessionHistory : () -> Cmd msg

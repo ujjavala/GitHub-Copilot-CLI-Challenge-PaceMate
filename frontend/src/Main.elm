@@ -28,6 +28,8 @@ init () =
       , theme = Types.Light
       , currentPage = Types.PracticePage
       , analytics = Nothing
+      , selectedWidget = Nothing
+      , sessionHistory = []
       }
     , Cmd.none
     )

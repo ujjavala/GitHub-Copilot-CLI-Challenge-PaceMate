@@ -139,4 +139,18 @@ defmodule Backend.Sessions do
     |> limit(1)
     |> Repo.one()
   end
+
+  @doc """
+  Get session history for the last N days (for timeline charts).
+  Returns raw session data ordered by practiced_at.
+  """
+  def get_session_history(days) do
+    cutoff_date = DateTime.utc_now() |> DateTime.add(-(days * 24 * 60 * 60), :second)
+
+    from(s in Session,
+      where: s.practiced_at >= ^cutoff_date,
+      order_by: [asc: s.practiced_at]
+    )
+    |> Repo.all()
+  end
 end

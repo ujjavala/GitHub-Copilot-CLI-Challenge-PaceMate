@@ -211,6 +211,14 @@ header h1 {
     align-items: center;
 }
 
+/* Override for dashboard page */
+.main-container:has(.dashboard-layout) {
+    display: flex;
+    max-width: 100%;
+    padding: 0;
+    gap: 0;
+}
+
 main {
     display: flex;
     align-items: center;
@@ -965,12 +973,13 @@ footer p {
    ============================================ */
 .dashboard-container {
     width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 2rem 1rem;
+    max-width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
 }
 
 .dashboard-title {
@@ -978,15 +987,15 @@ footer p {
     font-weight: 700;
     color: var(--text-primary);
     margin-bottom: 0.5rem;
-    text-align: center;
+    text-align: left;
     width: 100%;
 }
 
 .dashboard-subtitle {
     font-size: 1.125rem;
     color: var(--text-secondary);
-    margin-bottom: 3rem;
-    text-align: center;
+    margin-bottom: 2rem;
+    text-align: left;
     width: 100%;
 }
 
@@ -1003,7 +1012,6 @@ footer p {
     gap: 1.5rem;
     margin-top: 2rem;
     width: 100%;
-    max-width: 900px;
 }
 
 .stat-card {
@@ -1016,12 +1024,20 @@ footer p {
     gap: 1.25rem;
     transition: all 0.3s ease;
     box-shadow: var(--shadow-sm);
+    cursor: pointer;
 }
 
 .stat-card:hover {
     transform: translateY(-4px);
-    box-shadow: var(--shadow-lg);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
     border-color: var(--accent-primary);
+}
+
+.stat-card.selected {
+    border-color: var(--accent-primary);
+    box-shadow: 0 4px 16px rgba(59, 130, 246, 0.25);
+    transform: translateY(-2px);
+    background: var(--bg-primary);
 }
 
 .stat-icon {
@@ -1154,7 +1170,6 @@ footer p {
     box-shadow: var(--shadow-lg);
     text-align: center;
     width: 100%;
-    max-width: 900px;
 }
 
 .encouragement-icon {
@@ -1183,6 +1198,139 @@ footer p {
     text-align: center;
 }
 
+/* ============================================
+   DASHBOARD LAYOUT WITH CHART
+   ============================================ */
+.dashboard-layout {
+    display: flex;
+    gap: 2rem;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 2rem;
+    box-sizing: border-box;
+}
+
+.dashboard-left {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.dashboard-right {
+    flex: 1;
+    min-width: 0;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 1rem;
+    padding: 2rem;
+    box-shadow: var(--shadow-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+.dashboard-right-empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Chart placeholder */
+.chart-placeholder {
+    text-align: center;
+    color: var(--text-tertiary);
+    padding: 3rem 2rem;
+}
+
+.chart-placeholder-icon {
+    font-size: 4rem;
+    opacity: 0.2;
+    margin-bottom: 1rem;
+}
+
+.chart-placeholder-text {
+    font-size: 1.125rem;
+    opacity: 0.6;
+    max-width: 300px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
+/* Chart container */
+.chart-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+
+.chart-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+}
+
+.timeline-chart {
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    max-height: 600px;
+}
+
+.chart-point {
+    cursor: pointer;
+    transition: r 0.2s ease;
+}
+
+.chart-point:hover {
+    r: 7;
+}
+
+.chart-empty {
+    text-align: center;
+    color: var(--text-secondary);
+    padding: 4rem 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.chart-empty i {
+    font-size: 3rem;
+    opacity: 0.3;
+    margin-bottom: 1rem;
+}
+
+.chart-empty p {
+    margin: 0.5rem 0;
+}
+
+@media (max-width: 1024px) {
+    .dashboard-layout {
+        flex-direction: column;
+    }
+
+    .dashboard-left {
+        flex: 1;
+        width: 100%;
+    }
+
+    .dashboard-right {
+        width: 100%;
+        min-height: 400px;
+    }
+}
+
 @media (max-width: 768px) {
     .encouragement-banner {
         padding: 1.25rem 1.5rem;
@@ -1196,6 +1344,18 @@ footer p {
 
     .encouragement-icon {
         font-size: 1.25rem;
+    }
+
+    .dashboard-layout {
+        gap: 1.5rem;
+    }
+
+    .chart-title {
+        font-size: 1.125rem;
+    }
+
+    .timeline-chart {
+        max-width: 100%;
     }
 }
 

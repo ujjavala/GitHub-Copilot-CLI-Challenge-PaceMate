@@ -130,6 +130,59 @@ if (app.ports && app.ports.fetchAnalytics) {
   });
 }
 
+// Listen for session history fetch requests from Elm
+if (app.ports && app.ports.fetchSessionHistory) {
+  app.ports.fetchSessionHistory.subscribe(function() {
+    // Get session history from localStorage
+    const sessions = JSON.parse(localStorage.getItem('pacemate_sessions') || '[]');
+
+    // Aggregate by date
+    const aggregatedByDate = {};
+    sessions.forEach(session => {
+      const date = new Date(session.date).toISOString().split('T')[0];
+      if (!aggregatedByDate[date]) {
+        aggregatedByDate[date] = {
+          date: date,
+          sessions: 0,
+          words: 0,
+          avgWpm: 0,
+          totalWpm: 0
+        };
+      }
+      aggregatedByDate[date].sessions += 1;
+      aggregatedByDate[date].words += session.words || 0;
+      aggregatedByDate[date].totalWpm += session.wpm || 0;
+    });
+
+    // Calculate averages and convert to array
+    const historyArray = Object.values(aggregatedByDate).map(day => ({
+      date: day.date,
+      sessions: day.sessions,
+      words: day.words,
+      avgWpm: day.sessions > 0 ? day.totalWpm / day.sessions : 0
+    })).sort((a, b) => a.date.localeCompare(b.date));
+
+    // Send to Elm
+    if (app.ports && app.ports.recvSessionHistory) {
+      app.ports.recvSessionHistory.send(historyArray);
+      console.log('[SessionHistory] Sent history:', historyArray);
+    }
+
+    // Optionally try to fetch from backend if available
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+      fetch('http://localhost:4000/api/sessions/history')
+        .then(response => response.json())
+        .then(data => {
+          console.log('[SessionHistory] Backend data also available:', data);
+          // Could merge or replace localStorage data here if desired
+        })
+        .catch(error => {
+          console.log('[SessionHistory] Backend not available, using localStorage only');
+        });
+    }
+  });
+}
+
 // WebSocket connection
 let socket = null;
 

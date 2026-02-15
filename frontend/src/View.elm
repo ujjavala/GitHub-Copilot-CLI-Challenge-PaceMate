@@ -3,7 +3,9 @@ module View exposing (view)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
-import Types exposing (State(..), Model, Msg(..), Feedback, Metrics, Theme(..), Page(..), AnalyticsData)
+import Svg exposing (svg, line, circle, text_, polyline, g, rect)
+import Svg.Attributes as SvgAttr
+import Types exposing (State(..), Model, Msg(..), Feedback, Metrics, Theme(..), Page(..), AnalyticsData, WidgetType(..), SessionHistory)
 import Constants
 
 
@@ -31,7 +33,7 @@ view model =
 
             DashboardPage ->
                 div [ class "main-container" ]
-                    [ main_ [] [ viewDashboard model.analytics ]
+                    [ viewDashboard model
                     ]
         , viewFooter
         ]
@@ -336,37 +338,55 @@ roundTo decimals value =
     toFloat (round (value * multiplier)) / multiplier
 
 
-{-| Dashboard view showing analytics
+{-| Dashboard view showing analytics with optional chart
 -}
-viewDashboard : Maybe AnalyticsData -> Html Msg
-viewDashboard maybeAnalytics =
-    div [ class "dashboard-container" ]
-        [ h2 [ class "dashboard-title" ] [ text "Your Progress" ]
-        , p [ class "dashboard-subtitle" ] [ text "Track your mindful speaking journey" ]
-        , case maybeAnalytics of
-            Just analytics ->
-                viewAnalyticsGrid analytics
+viewDashboard : Model -> Html Msg
+viewDashboard model =
+    div [ class "dashboard-layout" ]
+        [ div [ class "dashboard-left" ]
+            [ div [ class "dashboard-container" ]
+                [ h2 [ class "dashboard-title" ] [ text "Your Progress" ]
+                , p [ class "dashboard-subtitle" ] [ text "Track your mindful speaking journey" ]
+                , case model.analytics of
+                    Just analytics ->
+                        div []
+                            [ viewEncouragement analytics
+                            , viewAnalyticsGrid analytics model.selectedWidget
+                            ]
 
-            Nothing ->
-                div [ class "loading-container" ]
-                    [ p [] [ text "Loading your analytics..." ]
-                    , div [ class "spinner" ] []
-                    ]
+                    Nothing ->
+                        div [ class "loading-container" ]
+                            [ p [] [ text "Loading your analytics..." ]
+                            , div [ class "spinner" ] []
+                            ]
+                ]
+            ]
+        , div [ class "dashboard-right" ]
+            [ case ( model.selectedWidget, model.analytics ) of
+                ( Just widgetType, Just _ ) ->
+                    viewChart widgetType model.sessionHistory
+
+                ( Nothing, Just _ ) ->
+                    div [ class "chart-placeholder" ]
+                        [ i [ class "fas fa-chart-line chart-placeholder-icon" ] []
+                        , p [ class "chart-placeholder-text" ] [ text "Click on a stat card to view detailed trends" ]
+                        ]
+
+                _ ->
+                    text ""
+            ]
         ]
 
 
-{-| Analytics grid with stat cards and encouragement
+{-| Analytics grid with stat cards
 -}
-viewAnalyticsGrid : AnalyticsData -> Html Msg
-viewAnalyticsGrid analytics =
-    div [ class "dashboard-content" ]
-        [ viewEncouragement analytics
-        , div [ class "analytics-grid" ]
-            [ viewStatCard "fa-calendar-check" "Total Sessions" (String.fromInt analytics.totalSessions) "session-card"
-            , viewStatCard "fa-comment" "Words Spoken" (String.fromInt analytics.totalWords) "words-card"
-            , viewStatCard "fa-gauge-high" "Average WPM" (String.fromFloat (roundTo 1 analytics.averageWpm)) "wpm-card"
-            , viewStatCard "fa-fire" "Current Streak" (String.fromInt analytics.currentStreak ++ " days") "streak-card"
-            ]
+viewAnalyticsGrid : AnalyticsData -> Maybe WidgetType -> Html Msg
+viewAnalyticsGrid analytics selectedWidget =
+    div [ class "analytics-grid" ]
+        [ viewStatCard SessionsWidget "fa-calendar-check" "Total Sessions" (String.fromInt analytics.totalSessions) "session-card" selectedWidget
+        , viewStatCard WordsWidget "fa-comment" "Words Spoken" (String.fromInt analytics.totalWords) "words-card" selectedWidget
+        , viewStatCard WpmWidget "fa-gauge-high" "Average WPM" (String.fromFloat (roundTo 1 analytics.averageWpm)) "wpm-card" selectedWidget
+        , viewStatCard StreakWidget "fa-fire" "Current Streak" (String.fromInt analytics.currentStreak ++ " days") "streak-card" selectedWidget
         ]
 
 
@@ -394,11 +414,21 @@ viewEncouragement analytics =
         ]
 
 
-{-| Individual stat card
+{-| Individual stat card with click handler
 -}
-viewStatCard : String -> String -> String -> String -> Html Msg
-viewStatCard iconClass label value cardClass =
-    div [ class ("stat-card " ++ cardClass) ]
+viewStatCard : WidgetType -> String -> String -> String -> String -> Maybe WidgetType -> Html Msg
+viewStatCard widgetType iconClass label value cardClass selectedWidget =
+    let
+        isSelected =
+            selectedWidget == Just widgetType
+
+        selectedClass =
+            if isSelected then " selected" else ""
+    in
+    div
+        [ class ("stat-card " ++ cardClass ++ selectedClass)
+        , onClick (SelectWidget widgetType)
+        ]
         [ div [ class "stat-icon" ]
             [ i [ class ("fas " ++ iconClass) ] [] ]
         , div [ class "stat-content" ]
@@ -406,3 +436,227 @@ viewStatCard iconClass label value cardClass =
             , p [ class "stat-value" ] [ text value ]
             ]
         ]
+
+
+{-| Chart container with title and content
+-}
+viewChart : WidgetType -> List SessionHistory -> Html Msg
+viewChart widgetType history =
+    div [ class "chart-container" ]
+        [ h3 [ class "chart-title" ]
+            [ i [ class ("fas " ++ getWidgetIcon widgetType), style "margin-right" "0.5rem" ] []
+            , text (getChartTitle widgetType)
+            ]
+        , if List.isEmpty history then
+            div [ class "chart-empty" ]
+                [ i [ class "fas fa-chart-line", style "font-size" "3rem", style "opacity" "0.3", style "margin-bottom" "1rem" ] []
+                , p [] [ text "No data available yet." ]
+                , p [ style "font-size" "0.9rem", style "opacity" "0.7" ] [ text "Start practicing to see your progress!" ]
+                ]
+          else
+            viewTimelineChart widgetType history
+        ]
+
+
+{-| Get chart title based on widget type
+-}
+getChartTitle : WidgetType -> String
+getChartTitle widgetType =
+    case widgetType of
+        SessionsWidget ->
+            "Sessions Over Time"
+
+        WordsWidget ->
+            "Words Spoken Trend"
+
+        WpmWidget ->
+            "Speaking Speed (WPM)"
+
+        StreakWidget ->
+            "Practice Consistency"
+
+
+{-| Get icon for widget type
+-}
+getWidgetIcon : WidgetType -> String
+getWidgetIcon widgetType =
+    case widgetType of
+        SessionsWidget ->
+            "fa-calendar-check"
+
+        WordsWidget ->
+            "fa-comment"
+
+        WpmWidget ->
+            "fa-gauge-high"
+
+        StreakWidget ->
+            "fa-fire"
+
+
+{-| Timeline chart using SVG
+-}
+viewTimelineChart : WidgetType -> List SessionHistory -> Html Msg
+viewTimelineChart widgetType history =
+    let
+        width = 700
+        height = 400
+        paddingValue = 60
+        chartWidthValue = width - (2 * paddingValue)
+        chartHeightValue = height - (2 * paddingValue)
+
+        dataPoints = extractDataPoints widgetType history
+        maxValue = List.maximum dataPoints |> Maybe.withDefault 1 |> Basics.max 1
+        pointCount = List.length dataPoints
+
+        xStep = if pointCount > 1 then toFloat chartWidthValue / toFloat (pointCount - 1) else 0
+        yScale = toFloat chartHeightValue / maxValue
+
+        points =
+            List.indexedMap
+                (\index value ->
+                    let
+                        x =
+                            toFloat paddingValue + (toFloat index * xStep)
+
+                        y =
+                            toFloat paddingValue + (toFloat chartHeightValue - (value * yScale))
+                    in
+                    ( x, y )
+                )
+                dataPoints
+
+        linePoints = points
+            |> List.map (\(x, y) -> String.fromFloat x ++ "," ++ String.fromFloat y)
+            |> String.join " "
+    in
+    svg
+        [ SvgAttr.width (String.fromInt width)
+        , SvgAttr.height (String.fromInt height)
+        , SvgAttr.class "timeline-chart"
+        , SvgAttr.viewBox ("0 0 " ++ String.fromInt width ++ " " ++ String.fromInt height)
+        ]
+        [ -- Background grid
+          g [ SvgAttr.class "chart-grid" ]
+            (List.range 0 4 |> List.map (\i ->
+                let
+                    y = toFloat paddingValue + (toFloat i * (toFloat chartHeightValue / 4))
+                in
+                line
+                    [ SvgAttr.x1 (String.fromFloat (toFloat paddingValue))
+                    , SvgAttr.y1 (String.fromFloat y)
+                    , SvgAttr.x2 (String.fromFloat (toFloat (paddingValue + chartWidthValue)))
+                    , SvgAttr.y2 (String.fromFloat y)
+                    , SvgAttr.stroke "#e0e0e0"
+                    , SvgAttr.strokeWidth "1"
+                    ]
+                    []
+            ))
+        , -- Y-axis labels
+          g [ SvgAttr.class "chart-labels" ]
+            (List.range 0 4 |> List.map (\i ->
+                let
+                    value = maxValue * (1 - (toFloat i / 4))
+                    y = toFloat paddingValue + (toFloat i * (toFloat chartHeightValue / 4))
+                in
+                text_
+                    [ SvgAttr.x (String.fromFloat (toFloat paddingValue - 10))
+                    , SvgAttr.y (String.fromFloat (y + 4))
+                    , SvgAttr.textAnchor "end"
+                    , SvgAttr.fontSize "12"
+                    , SvgAttr.fill "#666"
+                    ]
+                    [ Svg.text (formatValue widgetType value) ]
+            ))
+        , -- Data line
+          polyline
+            [ SvgAttr.points linePoints
+            , SvgAttr.fill "none"
+            , SvgAttr.stroke "#3b82f6"
+            , SvgAttr.strokeWidth "3"
+            , SvgAttr.strokeLinecap "round"
+            , SvgAttr.strokeLinejoin "round"
+            ]
+            []
+        , -- Data points
+          g [ SvgAttr.class "chart-points" ]
+            (points |> List.map (\(x, y) ->
+                circle
+                    [ SvgAttr.cx (String.fromFloat x)
+                    , SvgAttr.cy (String.fromFloat y)
+                    , SvgAttr.r "6"
+                    , SvgAttr.fill "#3b82f6"
+                    , SvgAttr.class "chart-point"
+                    ]
+                    []
+            ))
+        , -- X-axis date labels (show first, middle, and last dates)
+          g [ SvgAttr.class "chart-x-labels" ]
+            (let
+                labelIndices =
+                    if pointCount <= 3 then
+                        List.range 0 (pointCount - 1)
+                    else
+                        [ 0, pointCount // 2, pointCount - 1 ]
+             in
+             labelIndices
+                |> List.filterMap (\index ->
+                    case ( List.drop index history |> List.head, List.drop index points |> List.head ) of
+                        ( Just historyItem, Just (x, _) ) ->
+                            Just (
+                                text_
+                                    [ SvgAttr.x (String.fromFloat x)
+                                    , SvgAttr.y (String.fromFloat (toFloat (paddingValue + chartHeightValue + 20)))
+                                    , SvgAttr.textAnchor "middle"
+                                    , SvgAttr.fontSize "11"
+                                    , SvgAttr.fill "#666"
+                                    ]
+                                    [ Svg.text (formatDate historyItem.date) ]
+                            )
+                        _ ->
+                            Nothing
+                )
+            )
+        ]
+
+
+{-| Extract data points for specific widget type
+-}
+extractDataPoints : WidgetType -> List SessionHistory -> List Float
+extractDataPoints widgetType history =
+    case widgetType of
+        SessionsWidget ->
+            List.map (\h -> toFloat h.sessions) history
+
+        WordsWidget ->
+            List.map (\h -> toFloat h.words) history
+
+        WpmWidget ->
+            List.map (\h -> h.avgWpm) history
+
+        StreakWidget ->
+            List.map (\h -> toFloat h.sessions) history
+
+
+{-| Format value based on widget type
+-}
+formatValue : WidgetType -> Float -> String
+formatValue widgetType value =
+    case widgetType of
+        WpmWidget ->
+            String.fromInt (round value)
+
+        _ ->
+            String.fromInt (round value)
+
+
+{-| Format date for X-axis labels (MM/DD format)
+-}
+formatDate : String -> String
+formatDate dateString =
+    case String.split "-" dateString of
+        [ _, month, day ] ->
+            month ++ "/" ++ day
+
+        _ ->
+            dateString

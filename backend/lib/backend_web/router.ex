@@ -26,6 +26,7 @@ defmodule BackendWeb.Router do
 
     get "/health", PageController, :health
     get "/analytics/summary", AnalyticsController, :summary
+    get "/sessions/history", SessionController, :history
   end
 
   scope "/", BackendWeb do

@@ -11,6 +11,7 @@ COPY frontend/dist ./dist
 COPY frontend/src ./src
 COPY frontend/index.html .
 COPY frontend/styles.css .
+COPY frontend/*.png .
 
 # Expose port
 EXPOSE 3000

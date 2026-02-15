@@ -1,8 +1,8 @@
-port module Subscriptions exposing (subscriptions, recv, recvAnalytics)
+port module Subscriptions exposing (subscriptions, recv, recvAnalytics, recvSessionHistory)
 
 import Json.Decode as Decode exposing (Decoder)
 import Json.Encode as Encode
-import Types exposing (Model, Msg(..), Feedback, Metrics, AnalyticsData)
+import Types exposing (Model, Msg(..), Feedback, Metrics, AnalyticsData, SessionHistory)
 
 
 {-| Subscribe to incoming WebSocket messages and analytics data
@@ -12,6 +12,7 @@ subscriptions _ =
     Sub.batch
         [ recv decodeFeedbackMessage
         , recvAnalytics decodeAnalyticsMessage
+        , recvSessionHistory decodeSessionHistoryMessage
         ]
 
 
@@ -80,3 +81,31 @@ port recv : (Encode.Value -> msg) -> Sub msg
 {-| External port for receiving analytics data
 -}
 port recvAnalytics : (Encode.Value -> msg) -> Sub msg
+
+
+{-| Decode session history from server
+-}
+decodeSessionHistoryMessage : Encode.Value -> Msg
+decodeSessionHistoryMessage value =
+    case Decode.decodeValue (Decode.list sessionHistoryDecoder) value of
+        Ok history ->
+            ReceiveSessionHistory (Ok history)
+
+        Err error ->
+            ReceiveSessionHistory (Err (Decode.errorToString error))
+
+
+{-| Decoder for SessionHistory record
+-}
+sessionHistoryDecoder : Decoder SessionHistory
+sessionHistoryDecoder =
+    Decode.map4 SessionHistory
+        (Decode.field "date" Decode.string)
+        (Decode.field "sessions" Decode.int)
+        (Decode.field "words" Decode.int)
+        (Decode.field "avgWpm" Decode.float)
+
+
+{-| External port for receiving session history
+-}
+port recvSessionHistory : (Encode.Value -> msg) -> Sub msg

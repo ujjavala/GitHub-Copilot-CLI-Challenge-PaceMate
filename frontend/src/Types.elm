@@ -1,4 +1,4 @@
-module Types exposing (State(..), Model, Msg(..), Feedback, Metrics, Theme(..), Page(..), AnalyticsData)
+module Types exposing (State(..), Model, Msg(..), Feedback, Metrics, Theme(..), Page(..), AnalyticsData, WidgetType(..), SessionHistory)
 
 
 {-| Page navigation
@@ -55,6 +55,25 @@ type alias AnalyticsData =
     }
 
 
+{-| Widget types for dashboard
+-}
+type WidgetType
+    = SessionsWidget
+    | WordsWidget
+    | WpmWidget
+    | StreakWidget
+
+
+{-| Session history data point
+-}
+type alias SessionHistory =
+    { date : String
+    , sessions : Int
+    , words : Int
+    , avgWpm : Float
+    }
+
+
 {-| Application model containing session state and feedback
 -}
 type alias Model =
@@ -63,6 +82,8 @@ type alias Model =
     , theme : Theme
     , currentPage : Page
     , analytics : Maybe AnalyticsData
+    , selectedWidget : Maybe WidgetType
+    , sessionHistory : List SessionHistory
     }
 
 
@@ -78,3 +99,5 @@ type Msg
     | NavigateTo Page
     | ReceiveFeedback (Result String Feedback)
     | ReceiveAnalytics (Result String AnalyticsData)
+    | SelectWidget WidgetType
+    | ReceiveSessionHistory (Result String (List SessionHistory))
