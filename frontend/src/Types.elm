@@ -84,6 +84,7 @@ type alias Model =
     , analytics : Maybe AnalyticsData
     , selectedWidget : Maybe WidgetType
     , sessionHistory : List SessionHistory
+    , currentPrompt : String
     }
 
 
@@ -101,3 +102,4 @@ type Msg
     | ReceiveAnalytics (Result String AnalyticsData)
     | SelectWidget WidgetType
     | ReceiveSessionHistory (Result String (List SessionHistory))
+    | GenerateRandomPrompt String

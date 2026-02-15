@@ -5,6 +5,8 @@ import Types exposing (Model, Msg(..))
 import Update
 import View
 import Subscriptions
+import Prompts
+import Random
 
 
 {-| Main application entry point
@@ -30,6 +32,7 @@ init () =
       , analytics = Nothing
       , selectedWidget = Nothing
       , sessionHistory = []
+      , currentPrompt = "Tell me about your day and what you're looking forward to."
       }
-    , Cmd.none
+    , Random.generate Types.GenerateRandomPrompt Prompts.getRandomPrompt
     )

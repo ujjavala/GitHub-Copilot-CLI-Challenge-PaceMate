@@ -2,6 +2,8 @@ port module Update exposing (update, send, themeChanged, fetchAnalytics, fetchSe
 
 import Json.Encode as Encode
 import Types exposing (State(..), Model, Msg(..), Feedback, Theme(..), Page(..))
+import Prompts
+import Random
 
 
 {-| Pure update function implementing state machine logic
@@ -11,7 +13,7 @@ update msg model =
     case msg of
         ClickStart ->
             ( { model | state = Breathing }
-            , Cmd.none
+            , Random.generate GenerateRandomPrompt Prompts.getRandomPrompt
             )
 
         ClickBreathing ->
@@ -43,7 +45,15 @@ update msg model =
 
         ClickRestart ->
             ( { model | state = Idle, feedback = Nothing }
-            , sendRestartSession ()
+            , Cmd.batch
+                [ sendRestartSession ()
+                , Random.generate GenerateRandomPrompt Prompts.getRandomPrompt
+                ]
+            )
+
+        GenerateRandomPrompt prompt ->
+            ( { model | currentPrompt = prompt }
+            , Cmd.none
             )
 
         ToggleTheme ->

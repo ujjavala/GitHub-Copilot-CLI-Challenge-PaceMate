@@ -157,7 +157,7 @@ viewStateContent model =
             viewBreathingState
 
         Prompt ->
-            viewPromptState
+            viewPromptState model.currentPrompt
 
         Speaking ->
             viewSpeakingState
@@ -202,13 +202,13 @@ viewBreathingState =
 
 {-| Prompt state: display speaking prompt
 -}
-viewPromptState : Html Msg
-viewPromptState =
+viewPromptState : String -> Html Msg
+viewPromptState currentPrompt =
     div [ class "state prompt" ]
         [ h2 [] [ text Constants.promptTitle ]
         , div [ class "prompt-text" ]
             [ i [ class "fas fa-quote-left" ] []
-            , text (" " ++ Constants.promptDefaultText ++ " ")
+            , text (" " ++ currentPrompt ++ " ")
             , i [ class "fas fa-quote-right" ] []
             ]
         , p [] [ text "Speak at your own pace. Take pauses whenever you need." ]
