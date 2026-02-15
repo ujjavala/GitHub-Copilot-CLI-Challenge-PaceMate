@@ -86,5 +86,6 @@ ollama_data/
 .erlang.mk
 rel/
 priv/
+!backend/priv/repo/migrations/
 tags
 TAGS
