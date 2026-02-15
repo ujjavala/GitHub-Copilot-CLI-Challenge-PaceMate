@@ -10,6 +10,7 @@ defmodule Backend.MixProject do
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
       deps: deps(),
+      releases: releases(),
       compilers: [:phoenix_live_view] ++ Mix.compilers(),
       listeners: [Phoenix.CodeReloader]
     ]
@@ -21,7 +22,7 @@ defmodule Backend.MixProject do
   def application do
     [
       mod: {Backend.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:logger, :runtime_tools, :ecto_sql]
     ]
   end
 
@@ -60,7 +61,11 @@ defmodule Backend.MixProject do
       {:jason, "~> 1.2"},
       {:dns_cluster, "~> 0.2.0"},
       {:bandit, "~> 1.5"},
-      {:httpoison, "~> 2.0"}
+      {:httpoison, "~> 2.0"},
+      {:ecto_sql, "~> 3.11"},
+      {:ecto_sqlite3, "~> 0.15"},
+      {:vega_lite, "~> 0.1.9"},
+      {:kino_vega_lite, "~> 0.1.11"}
     ]
   end
 
@@ -82,5 +87,31 @@ defmodule Backend.MixProject do
       ],
       precommit: ["compile --warnings-as-errors", "deps.unlock --unused", "format", "test"]
     ]
+  end
+
+  # Release configuration
+  defp releases do
+    [
+      backend: [
+        include_executables_for: [:unix],
+        applications: [runtime_tools: :permanent],
+        steps: [:assemble, &copy_priv_dir/1]
+      ]
+    ]
+  end
+
+  # Copy priv directory to release
+  defp copy_priv_dir(release) do
+    priv_src = "priv"
+    priv_dest = Path.join(release.path, "priv")
+
+    if File.exists?(priv_src) do
+      File.cp_r!(priv_src, priv_dest)
+    else
+      # Create empty priv directory structure if source doesn't exist
+      File.mkdir_p!(Path.join(priv_dest, "repo/migrations"))
+    end
+
+    release
   end
 end

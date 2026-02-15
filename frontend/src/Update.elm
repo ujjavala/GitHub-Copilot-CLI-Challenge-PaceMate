@@ -1,7 +1,7 @@
-port module Update exposing (update, send, themeChanged)
+port module Update exposing (update, send, themeChanged, fetchAnalytics)
 
 import Json.Encode as Encode
-import Types exposing (State(..), Model, Msg(..), Feedback, Theme(..))
+import Types exposing (State(..), Model, Msg(..), Feedback, Theme(..), Page(..))
 
 
 {-| Pure update function implementing state machine logic
@@ -68,6 +68,32 @@ update msg model =
             , themeChanged themeString
             )
 
+        NavigateTo page ->
+            let
+                cmd =
+                    case page of
+                        DashboardPage ->
+                            fetchAnalytics ()
+
+                        PracticePage ->
+                            Cmd.none
+            in
+            ( { model | currentPage = page }
+            , cmd
+            )
+
+        ReceiveAnalytics result ->
+            case result of
+                Ok analyticsData ->
+                    ( { model | analytics = Just analyticsData }
+                    , Cmd.none
+                    )
+
+                Err _ ->
+                    ( model
+                    , Cmd.none
+                    )
+
 
 {-| Send "start_speaking" message to JavaScript to start microphone
 -}
@@ -122,3 +148,8 @@ port send : Encode.Value -> Cmd msg
 {-| Port for notifying JavaScript about theme changes
 -}
 port themeChanged : String -> Cmd msg
+
+
+{-| Port for fetching analytics data from backend
+-}
+port fetchAnalytics : () -> Cmd msg

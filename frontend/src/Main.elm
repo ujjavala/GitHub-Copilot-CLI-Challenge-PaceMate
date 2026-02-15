@@ -23,6 +23,11 @@ main =
 -}
 init : () -> ( Model, Cmd Msg )
 init () =
-    ( { state = Types.Idle, feedback = Nothing, theme = Types.Light }
+    ( { state = Types.Idle
+      , feedback = Nothing
+      , theme = Types.Light
+      , currentPage = Types.PracticePage
+      , analytics = Nothing
+      }
     , Cmd.none
     )

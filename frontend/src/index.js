@@ -22,6 +22,114 @@ if (app.ports && app.ports.themeChanged) {
   });
 }
 
+// LocalStorage-based analytics for offline/Netlify deployment
+function getLocalStorageAnalytics() {
+  try {
+    const sessions = JSON.parse(localStorage.getItem('pacemate_sessions') || '[]');
+
+    if (sessions.length === 0) {
+      return {
+        totalSessions: 0,
+        totalWords: 0,
+        averageWpm: 0,
+        currentStreak: 0
+      };
+    }
+
+    const totalSessions = sessions.length;
+    const totalWords = sessions.reduce((sum, s) => sum + (s.words || 0), 0);
+    const totalWpm = sessions.reduce((sum, s) => sum + (s.wpm || 0), 0);
+    const averageWpm = totalSessions > 0 ? totalWpm / totalSessions : 0;
+
+    // Calculate streak (consecutive days of practice)
+    const today = new Date().toDateString();
+    const sortedDates = sessions
+      .map(s => new Date(s.date).toDateString())
+      .filter((date, index, self) => self.indexOf(date) === index)
+      .sort((a, b) => new Date(b) - new Date(a));
+
+    let currentStreak = 0;
+    if (sortedDates.length > 0 && sortedDates[0] === today) {
+      currentStreak = 1;
+      for (let i = 1; i < sortedDates.length; i++) {
+        const currentDate = new Date(sortedDates[i]);
+        const previousDate = new Date(sortedDates[i - 1]);
+        const diffDays = Math.floor((previousDate - currentDate) / (1000 * 60 * 60 * 24));
+
+        if (diffDays === 1) {
+          currentStreak++;
+        } else {
+          break;
+        }
+      }
+    }
+
+    return {
+      totalSessions,
+      totalWords,
+      averageWpm: Math.round(averageWpm * 10) / 10,
+      currentStreak
+    };
+  } catch (error) {
+    console.error('[LocalStorage] Error reading analytics:', error);
+    return {
+      totalSessions: 0,
+      totalWords: 0,
+      averageWpm: 0,
+      currentStreak: 0
+    };
+  }
+}
+
+function saveSessionToLocalStorage(feedback) {
+  try {
+    const sessions = JSON.parse(localStorage.getItem('pacemate_sessions') || '[]');
+    const newSession = {
+      date: new Date().toISOString(),
+      words: feedback.metrics?.words || 0,
+      wpm: feedback.metrics?.estimated_wpm || 0,
+      timestamp: Date.now()
+    };
+
+    sessions.push(newSession);
+
+    // Keep only last 100 sessions to avoid storage issues
+    if (sessions.length > 100) {
+      sessions.splice(0, sessions.length - 100);
+    }
+
+    localStorage.setItem('pacemate_sessions', JSON.stringify(sessions));
+    console.log('[LocalStorage] Session saved:', newSession);
+  } catch (error) {
+    console.error('[LocalStorage] Error saving session:', error);
+  }
+}
+
+// Listen for analytics fetch requests from Elm
+if (app.ports && app.ports.fetchAnalytics) {
+  app.ports.fetchAnalytics.subscribe(function() {
+    // Always use localStorage analytics (works offline and on Netlify)
+    const localAnalytics = getLocalStorageAnalytics();
+
+    if (app.ports && app.ports.recvAnalytics) {
+      app.ports.recvAnalytics.send(localAnalytics);
+    }
+
+    // Optionally try to sync with backend if available (enhancement only)
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+      fetch('http://localhost:4000/api/analytics/summary')
+        .then(response => response.json())
+        .then(data => {
+          // Backend data available, but we already sent localStorage data
+          console.log('[Analytics] Backend data also available:', data);
+        })
+        .catch(error => {
+          console.log('[Analytics] Backend not available, using localStorage only');
+        });
+    }
+  });
+}
+
 // WebSocket connection
 let socket = null;
 
@@ -147,6 +255,9 @@ function connectToChannel() {
       // Check if it's a response to our finished_speaking message
       if (msg.topic === 'session:user_session' && msg.event === 'phx_reply') {
         if (msg.payload && msg.payload.response) {
+          // Save session to localStorage for offline analytics
+          saveSessionToLocalStorage(msg.payload.response);
+
           // Send the detailed feedback to Elm
           app.ports.recv.send(msg.payload.response);
         }
@@ -307,6 +418,9 @@ app.ports.send.subscribe(function (msg) {
         // Use client-side analysis as fallback
         const analysis = analyzeClientSide(recognizedText, speechTimestamps, speechStartTime);
         console.log('[Client] Analysis result:', analysis);
+
+        // Save session to localStorage for offline analytics
+        saveSessionToLocalStorage(analysis);
 
         // Send analysis result to Elm app
         if (app.ports && app.ports.recv) {

@@ -18,12 +18,14 @@ defmodule BackendWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :home
+    live "/dashboard", DashboardLive
   end
 
   scope "/api", BackendWeb do
     pipe_through :api
 
     get "/health", PageController, :health
+    get "/analytics/summary", AnalyticsController, :summary
   end
 
   scope "/", BackendWeb do

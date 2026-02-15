@@ -1,15 +1,18 @@
-port module Subscriptions exposing (subscriptions, recv)
+port module Subscriptions exposing (subscriptions, recv, recvAnalytics)
 
 import Json.Decode as Decode exposing (Decoder)
 import Json.Encode as Encode
-import Types exposing (Model, Msg(..), Feedback, Metrics)
+import Types exposing (Model, Msg(..), Feedback, Metrics, AnalyticsData)
 
 
-{-| Subscribe to incoming WebSocket messages
+{-| Subscribe to incoming WebSocket messages and analytics data
 -}
 subscriptions : Model -> Sub Msg
 subscriptions _ =
-    recv decodeFeedbackMessage
+    Sub.batch
+        [ recv decodeFeedbackMessage
+        , recvAnalytics decodeAnalyticsMessage
+        ]
 
 
 {-| Decode detailed feedback message from server
@@ -46,6 +49,34 @@ metricsDecoder =
         (Decode.field "estimated_wpm" Decode.float)
 
 
+{-| Decode analytics data from server
+-}
+decodeAnalyticsMessage : Encode.Value -> Msg
+decodeAnalyticsMessage value =
+    case Decode.decodeValue analyticsDecoder value of
+        Ok analyticsData ->
+            ReceiveAnalytics (Ok analyticsData)
+
+        Err error ->
+            ReceiveAnalytics (Err (Decode.errorToString error))
+
+
+{-| Decoder for AnalyticsData record
+-}
+analyticsDecoder : Decoder AnalyticsData
+analyticsDecoder =
+    Decode.map4 AnalyticsData
+        (Decode.field "totalSessions" Decode.int)
+        (Decode.field "totalWords" Decode.int)
+        (Decode.field "averageWpm" Decode.float)
+        (Decode.field "currentStreak" Decode.int)
+
+
 {-| External port for receiving WebSocket messages
 -}
 port recv : (Encode.Value -> msg) -> Sub msg
+
+
+{-| External port for receiving analytics data
+-}
+port recvAnalytics : (Encode.Value -> msg) -> Sub msg

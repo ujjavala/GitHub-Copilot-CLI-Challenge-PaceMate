@@ -130,6 +130,21 @@ header {
     text-align: center;
 }
 
+.header-title-with-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+}
+
+.app-logo {
+    width: 2.75rem;
+    height: 2.75rem;
+    object-fit: contain;
+    border-radius: 0.5rem;
+    flex-shrink: 0;
+}
+
 .theme-toggle {
     background: var(--bg-primary);
     border: 2px solid var(--border-color);
@@ -806,6 +821,11 @@ footer p {
         font-size: 1.875rem;
     }
 
+    .app-logo {
+        width: 2.25rem;
+        height: 2.25rem;
+    }
+
     .subtitle {
         font-size: 0.9375rem;
     }
@@ -863,6 +883,11 @@ footer p {
         font-size: 1.5rem;
     }
 
+    .app-logo {
+        width: 2rem;
+        height: 2rem;
+    }
+
     .state {
         padding: 2rem 1.125rem;
     }
@@ -884,5 +909,302 @@ footer p {
 
     .metrics-grid {
         grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* ============================================
+   NAVIGATION & HEADER ACTIONS
+   ============================================ */
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.nav-tabs {
+    display: flex;
+    gap: 0.5rem;
+    background: var(--bg-secondary);
+    padding: 0.25rem;
+    border-radius: 0.75rem;
+    border: 1px solid var(--border-color);
+}
+
+.nav-tab {
+    padding: 0.5rem 1rem;
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    cursor: pointer;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.nav-tab:hover {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+}
+
+.nav-tab.active {
+    background: var(--accent-primary);
+    color: white;
+    box-shadow: var(--shadow-sm);
+}
+
+.nav-tab i {
+    font-size: 0.875rem;
+}
+
+/* ============================================
+   DASHBOARD
+   ============================================ */
+.dashboard-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.dashboard-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+    text-align: center;
+    width: 100%;
+}
+
+.dashboard-subtitle {
+    font-size: 1.125rem;
+    color: var(--text-secondary);
+    margin-bottom: 3rem;
+    text-align: center;
+    width: 100%;
+}
+
+.dashboard-content {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.analytics-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    margin-top: 2rem;
+    width: 100%;
+    max-width: 900px;
+}
+
+.stat-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    transition: all 0.3s ease;
+    box-shadow: var(--shadow-sm);
+}
+
+.stat-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--accent-primary);
+}
+
+.stat-icon {
+    width: 3.5rem;
+    height: 3.5rem;
+    min-width: 3.5rem;
+    border-radius: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+    color: white;
+    box-shadow: var(--shadow-md);
+}
+
+.stat-content {
+    flex: 1;
+}
+
+.stat-label {
+    font-size: 0.875rem;
+    color: var(--text-tertiary);
+    margin-bottom: 0.25rem;
+    font-weight: 500;
+}
+
+.stat-value {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+/* Card-specific accent colors */
+.session-card .stat-icon {
+    background: linear-gradient(135deg, #3b82f6, #60a5fa);
+}
+
+.words-card .stat-icon {
+    background: linear-gradient(135deg, #10b981, #34d399);
+}
+
+.wpm-card .stat-icon {
+    background: linear-gradient(135deg, #f59e0b, #fbbf24);
+}
+
+.streak-card .stat-icon {
+    background: linear-gradient(135deg, #ef4444, #f87171);
+}
+
+/* ============================================
+   RESPONSIVE - NAVIGATION & DASHBOARD
+   ============================================ */
+@media (max-width: 768px) {
+    .header-actions {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-end;
+    }
+
+    .nav-tabs {
+        order: -1;
+    }
+
+    .dashboard-title {
+        font-size: 1.75rem;
+    }
+
+    .dashboard-subtitle {
+        font-size: 1rem;
+    }
+
+    .analytics-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .stat-card {
+        padding: 1.25rem;
+    }
+
+    .stat-icon {
+        width: 3rem;
+        height: 3rem;
+        min-width: 3rem;
+        font-size: 1.25rem;
+    }
+
+    .stat-value {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .nav-tab {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.8125rem;
+    }
+
+    .stat-card {
+        padding: 1rem;
+        gap: 1rem;
+    }
+
+    .stat-icon {
+        width: 2.5rem;
+        height: 2.5rem;
+        min-width: 2.5rem;
+        font-size: 1rem;
+    }
+
+    .stat-value {
+        font-size: 1.25rem;
+    }
+}
+
+/* ============================================
+   DASHBOARD ENCOURAGEMENT
+   ============================================ */
+.encouragement-banner {
+    background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+    color: white;
+    padding: 1.5rem 2rem;
+    border-radius: 1rem;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    box-shadow: var(--shadow-lg);
+    text-align: center;
+    width: 100%;
+    max-width: 900px;
+}
+
+.encouragement-icon {
+    font-size: 1.5rem;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.encouragement-text {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+}
+
+/* Dashboard titles are already centered */
+.dashboard-title,
+.dashboard-subtitle {
+    text-align: center;
+}
+
+@media (max-width: 768px) {
+    .encouragement-banner {
+        padding: 1.25rem 1.5rem;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .encouragement-text {
+        font-size: 1rem;
+    }
+
+    .encouragement-icon {
+        font-size: 1.25rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .encouragement-banner {
+        padding: 1rem;
+    }
+
+    .encouragement-text {
+        font-size: 0.9375rem;
     }
 }

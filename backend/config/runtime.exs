@@ -24,6 +24,12 @@ config :backend, BackendWeb.Endpoint,
   http: [port: String.to_integer(System.get_env("PORT", "4000"))]
 
 if config_env() == :prod do
+  # Configure SQLite database for production
+  config :backend, Backend.Repo,
+    adapter: Ecto.Adapters.SQLite3,
+    database: Path.expand("../priv/pacemate_local.db", __DIR__),
+    pool_size: 5
+
   # The secret key base is used to sign/encrypt cookies and other secrets.
   # A default value is used in config/dev.exs and config/test.exs but you
   # want to use a different value for prod and you most likely don't want

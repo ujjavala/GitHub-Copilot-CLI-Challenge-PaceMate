@@ -13,6 +13,8 @@ services:
       - PORT=4000
       - SECRET_KEY_BASE=K6XE/MVtBw8E4WmnC9kIA7w8DR1mNC4jg1AigxM6L9WPqOqHY2A4j+qclEVgzYviv8IYpGN7MHZsxCXZrB2SCw==
       - OLLAMA_HOST=http://ollama:11434
+    volumes:
+      - pacemate_data:/app/priv
     depends_on:
       ollama:
         condition: service_healthy
@@ -72,3 +74,4 @@ networks:
 
 volumes:
   ollama_data:
+  pacemate_data:
