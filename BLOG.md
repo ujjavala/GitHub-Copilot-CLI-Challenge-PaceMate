@@ -21,6 +21,8 @@ Start session → Breathing exercise → Read a prompt → Speak (Web Speech API
 
 **UI/UX:** Clean design, dark mode, fully responsive, accessibility-first, animated breathing guide
 
+**Progress Dashboard:** Track your journey with analytics—total sessions, words spoken, average WPM, and practice streaks. All data stored locally in browser for privacy.
+
 **Metrics:** Duration, transcript, word count, pacing analysis, personalized recommendations
 
 **Dev-Friendly:** Docker Compose setup, comprehensive docs, 33+ tests (>85% coverage)
@@ -45,11 +47,14 @@ Local **Ollama + Phi3** for gentle feedback. Why local? Privacy (data never leav
 
 ## Tech Stack
 
-**Frontend:** Elm 0.19.1, WebSockets (Phoenix Channels), CSS Grid/Flexbox, Font Awesome 6
-**Backend:** Elixir 1.19.5, Phoenix 1.8.3, HTTPoison (Ollama client)
+**Frontend:** Elm 0.19.1, WebSockets (Phoenix Channels), CSS Grid/Flexbox, Font Awesome 6, localStorage (offline analytics)
+**Backend:** Elixir 1.19.5, Phoenix 1.8.3, Phoenix LiveView (real-time dashboards), HTTPoison (Ollama client)
+**Database:** SQLite3 via Ecto (local-first storage, sessions tracking)
+**Real-Time:** Phoenix PubSub for live dashboard updates, WebSockets for session communication
 **AI:** Ollama + Phi3 (local LLM)
 **DevOps:** Docker + Compose, Alpine Linux, Fly.io (backend), Netlify (frontend), GitHub Actions (CI/CD)
 **Testing:** ExUnit + Elm test, 33+ tests, >85% coverage
+**Analytics:** Dual-mode: Browser localStorage (privacy-first, offline) + optional SQLite backend (charting, streaks, history)
 
 ## Demo & Repository
 
@@ -68,7 +73,7 @@ docker-compose --profile ai up  # With AI (Phi3 downloads ~2GB first run)
 
 ## My Experience with GitHub Copilot CLI
 
-Copilot CLI was the game-changer that made this one-day sprint possible.
+Copilot CLI was the game-changer that made this one-day sprint possible, and continued to help with post-launch enhancements.
 
 **What it handled:**
 ✅ Elm state machines & JSON decoders (tricky type-safe patterns)
@@ -78,6 +83,7 @@ Copilot CLI was the game-changer that made this one-day sprint possible.
 ✅ Test cases, error handling, CSS Grid, environment configs
 ✅ Documentation structure across 5+ markdown files
 ✅ Git workflow & deployment scripts
+✅ Dashboard enhancements: localStorage analytics, responsive layouts, logo integration, centered alignment fixes
 
 **The real win?** I stayed in flow. Copilot handled syntax/boilerplate while I focused on *why* this matters for users who stutter and *how* to make it supportive. Cross-project context awareness (Elm ↔ Elixir ↔ DevOps) meant zero doc-hopping.
 
@@ -132,11 +138,33 @@ Normally, diving into two "forgotten" functional languages for a one-day project
 
 Not show-stoppers, just quirks to know.
 
+## Recent Enhancements
+
+**Dual-Dashboard Architecture:** Built two complementary analytics experiences:
+
+**Frontend Dashboard (Elm):** Privacy-first, localStorage-based analytics integrated into the practice app:
+- **Total Sessions:** See how many times you've practiced
+- **Words Spoken:** Track your speaking volume over time
+- **Average WPM:** Monitor your speaking pace patterns
+- **Current Streak:** Stay motivated with consecutive days tracking
+- **Design:** Custom branded logo, responsive 2-column grid, animated encouragement messages, gradient stat cards
+- **Why localStorage?** All data stays in your browser—no server tracking, complete privacy, works offline
+
+**Backend Dashboard (Phoenix LiveView):** Rich analytics with charts and real-time updates:
+- **Live Updates:** WebSocket-powered real-time stat updates via Phoenix PubSub
+- **WPM Charts:** Visual progress over time with animated bar charts
+- **Practice Heatmap:** Frequency visualization showing practice patterns
+- **Session History:** Detailed list of recent sessions with full transcripts
+- **Milestone Toasts:** Celebration notifications for achievements (first session, 10 sessions, 7-day streak, etc.)
+- **Database:** SQLite3 for persistent storage, Ecto queries for analytics aggregation
+
+**Architecture Choice:** Frontend dashboard for privacy-conscious users, backend dashboard for detailed insights. Both work independently.
+
 ## What Makes This Special
 
-**For users:** No judgment, no timer, gentle feedback, local privacy
-**For engineers:** "Boring" languages (Elm/Elixir) solve real problems, real-time architecture, local LLM (no API costs), type safety
-**For community:** Open source, comprehensive docs, proof that one-day meaningful builds are possible with AI tools
+**For users:** No judgment, no timer, gentle feedback, dual analytics (privacy-first localStorage + rich backend charts), real-time progress tracking, milestone celebrations
+**For engineers:** "Boring" languages (Elm/Elixir) solve real problems, Phoenix LiveView for real-time dashboards, SQLite for local-first persistence, dual-mode analytics architecture, local LLM (no API costs), type safety, WebSocket + PubSub for live updates
+**For community:** Open source, comprehensive docs, proof that meaningful builds with privacy-first features AND rich analytics are possible with thoughtful architecture
 
 ## Final Thoughts
 
