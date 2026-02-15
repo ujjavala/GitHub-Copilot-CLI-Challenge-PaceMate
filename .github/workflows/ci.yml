@@ -73,6 +73,14 @@ jobs:
         working-directory: backend
         run: mix compile --warnings-as-errors
 
+      - name: Create test database
+        working-directory: backend
+        run: MIX_ENV=test mix ecto.create
+
+      - name: Run database migrations
+        working-directory: backend
+        run: MIX_ENV=test mix ecto.migrate
+
       - name: Run backend tests
         working-directory: backend
         run: mix test

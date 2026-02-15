@@ -41,5 +41,5 @@ EXPOSE 8080
 HEALTHCHECK --interval=30s --timeout=3s --start-period=40s --retries=3 \
   CMD bin/backend eval "Application.ensure_started(:backend)"
 
-# Start application with migration
-CMD ["/bin/bash", "-c", "bin/backend eval 'Backend.Release.migrate()' && bin/backend start"]
+# Start application
+CMD ["bin/backend", "start"]

@@ -10,6 +10,9 @@ kill_signal = 'SIGTERM'
 [build]
   dockerfile = 'backend/Dockerfile'
 
+[deploy]
+  release_command = "bin/backend eval 'Backend.Release.migrate()'"
+
 [env]
   PHX_HOST = 'pacemate-backend.fly.dev'
   PHX_SERVER = 'true'
